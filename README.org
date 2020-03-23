@@ -1,0 +1,14 @@
+#+TITLE: tkABF Explorer
+#+DATE: 2020-03-23
+#+OPTIONS: toc:nil author:nil title:nil date:nil num:nil ^:{} \n:1 todo:nil
+#+PROPERTY: header-args :eval never-export
+#+LATEX_HEADER: \usepackage[margin=1.0in]{geometry}
+#+LATEX_HEADER: \hypersetup{colorlinks=true,citecolor=black,linkcolor=black,urlcolor=blue,linkbordercolor=blue,pdfborderstyle={/S/U/W 1}}
+#+LATEX_HEADER: \usepackage[round]{natbib}
+#+LATEX_HEADER: \renewcommand{\bibsection}
+#+ARCHIVE: daily_archive.org::datetree/* From master todo
+A simple python tkinter based gui to view and perform semi-automated analysis on axon binary format =ABF= files. We use The excellent pyABF package (https://github.com/swharden/pyABF) to do the hard work of parsing ABF files, Thanks [[https://github.com/swharden/][Scott!]]
+
+The idea is to provide a *simple*, cross platform (shar-able) app for viewing and simple semi-automated analysis. This is in progress, I wouldn't use it yet!
+
+

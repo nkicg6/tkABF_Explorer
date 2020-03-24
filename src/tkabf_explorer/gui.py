@@ -16,6 +16,7 @@ class TkAbfExplorer(tk.Tk):
     def __init__(self, *args, **kwargs):
         tk.Tk.__init__(self, *args, **kwargs)
         tk.Tk.wm_title(self,"tkABF Viewer v0.1-dev")
+        self.geometry("800x600")
         container = tk.Frame(self, bg="blue")
         container.pack(side="top", fill="both", expand=True)
         container.grid_rowconfigure(0, weight=1)
@@ -25,17 +26,29 @@ class TkAbfExplorer(tk.Tk):
         container.example = "container example"
         control_frame = ControlFrame(container, self)
         plot_frame = PlotFrame(container, self)
+        control_frame.bind("<Key>", control_frame.on_button)
         control_frame.grid(row=0,column=0, sticky="nsew")
         plot_frame.grid(row=0,column=1, sticky="nsew")
+        # events
+        self.bind("<Tab>", control_frame.on_button)
+    def print_v(self, event):
+        print(f"pressed ")
 
 
 class ControlFrame(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent, bg='red')
-        label = tk.Label(self, text="controls", font = LARGE_FONT)
-        label.pack(pady=10,padx=10)
-        # in our case, container is "parent" and can be accessed like so:
+        self.label = tk.Label(self, text="controls", font = LARGE_FONT)
+        #w = tk.IntVar()
+        self.label.pack(side="top",pady=10,padx=10)
+        self.entry = tk.Entry(self)
+        self.entry.pack()
         print(parent.example)
+        #self.bind("<Key>", self.on_button)
+    def on_button(self, event):
+        gotvar = self.entry.get()
+        self.label.config(text=gotvar)
+
 
 
 class PlotFrame(tk.Frame):

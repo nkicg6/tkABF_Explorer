@@ -11,6 +11,7 @@ class TkAbfExplorer(tk.Tk):
         tk.Tk.wm_title(self,"tkABF Viewer v0.1-dev")
         self.geometry("800x600")
         self.large_font = ("Verdana", 14)
+        self.small_font = ("Verdana", 10)
         # parent frame
         container = tk.Frame(self)
         container.pack(side="top", fill="both", expand=True)
@@ -27,9 +28,7 @@ class TkAbfExplorer(tk.Tk):
         control_frame.grid(row=0,column=0, sticky="nsew")
         plot_frame.grid(row=0,column=1, sticky="nsew")
         # events
-        self.bind("<Tab>", control_frame.on_button)
-    def print_v(self, event):
-        print(f"pressed ")
+        #self.bind("<Tab>", control_frame.on_button)
 
 app = TkAbfExplorer()
 app.mainloop()

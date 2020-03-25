@@ -8,13 +8,16 @@ class ControlFrame(tk.Frame):
         # frame button/info layout
         self.grid_rowconfigure(0, weight=1) # choose dir button
         self.grid_rowconfigure(1, weight=1) # dir display
-        self.grid_rowconfigure(2, weight=3) # other options
-        self.grid_rowconfigure(3, weight=1) # other options
+        self.grid_rowconfigure(2, weight=8) # other options
+        self.grid_rowconfigure(3, weight=3) # other options
         self.grid_columnconfigure(0, weight=1)
         self.grid_columnconfigure(1,weight=2)
-        self.label = ttk.Label(self, text="test option")
-        self.current_dir_label = ttk.Label(self, text="current dir",
-                                           font = controller.large_font)
+        self.label_text_update = tk.StringVar()
+        self.label_text_update.set("Default")
+        self.entry_text = ttk.Entry(self, textvariable=self.label_text_update)
+        self.label = ttk.Label(self, textvariable=self.label_text_update)
+        self.current_dir_listbox = tk.Listbox(self, font = controller.small_font,
+                                              width=25, height=1, bd=0,relief="flat")
         self.choose_dir_button = ttk.Button(self, text="Choose a directory",
                                             command=self.open_dir)
         # setup scrollbox for files
@@ -24,19 +27,13 @@ class ControlFrame(tk.Frame):
         self.list_of_files_scrollbar.config(command=self.list_of_files_scrollbox.yview)
         self.list_of_files_scrollbox.config(yscrollcommand=self.list_of_files_scrollbar.set)
 
-        self.entry_text = ttk.Entry(self)
         # layout
-
         self.list_of_files_scrollbar.grid(row=2,column=1,sticky="ns")
         self.list_of_files_scrollbox.grid(row=2,column=0, sticky="ns",padx=5)
         self.label.grid(row=3, column=2)
         self.choose_dir_button.grid(row=0)
-        self.current_dir_label.grid(row=1, sticky="nsew", padx=5)
+        self.current_dir_listbox.grid(row=1, sticky="nsew", padx=5)
         self.entry_text.grid(row=3)
-
-    def on_button(self, event):
-        gotvar = self.entry_text.get()
-        self.label.config(text=gotvar)
 
     def add_files_to_listbox(self):
         self.list_of_files_scrollbox.delete(0,tk.END)
@@ -59,6 +56,10 @@ class ControlFrame(tk.Frame):
         else:
             self.add_files_to_listbox()
 
+    def set_choose_dir_listbox(self):
+        self.current_dir_listbox.insert(tk.END, self.working_dir)
+
     def open_dir(self):
         self.working_dir = tk.filedialog.askdirectory()
         self.list_abfs()
+        self.set_choose_dir_listbox()

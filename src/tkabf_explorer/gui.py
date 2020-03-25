@@ -17,16 +17,19 @@ class TkAbfExplorer(tk.Tk):
         tk.Tk.__init__(self, *args, **kwargs)
         tk.Tk.wm_title(self,"tkABF Viewer v0.1-dev")
         self.geometry("800x600")
-        container = tk.Frame(self, bg="blue")
+        # parent frame
+        container = tk.Frame(self)
         container.pack(side="top", fill="both", expand=True)
         container.grid_rowconfigure(0, weight=1)
         container.grid_columnconfigure(0, weight=1)
         container.grid_rowconfigure(0, weight=1)
         container.grid_columnconfigure(1, weight=3)
+        # class vars
         container.example = "container example"
+        # two main frames
         control_frame = ControlFrame(container, self)
         plot_frame = PlotFrame(container, self)
-        control_frame.bind("<Key>", control_frame.on_button)
+        # frame placement
         control_frame.grid(row=0,column=0, sticky="nsew")
         plot_frame.grid(row=0,column=1, sticky="nsew")
         # events
@@ -37,17 +40,28 @@ class TkAbfExplorer(tk.Tk):
 
 class ControlFrame(tk.Frame):
     def __init__(self, parent, controller):
-        tk.Frame.__init__(self, parent, bg='red')
-        self.label = tk.Label(self, text="controls", font = LARGE_FONT)
-        #w = tk.IntVar()
-        self.label.pack(side="top",pady=10,padx=10)
-        self.entry = tk.Entry(self)
-        self.entry.pack()
-        print(parent.example)
-        #self.bind("<Key>", self.on_button)
+        tk.Frame.__init__(self, parent, bg='grey')
+        # frame button/info layout
+        self.grid_rowconfigure(0, weight=1) # choose dir button
+        self.grid_rowconfigure(1, weight=2) # dir display
+        self.grid_rowconfigure(2, weight=1) # other options
+        self.grid_columnconfigure(0, weight=1)
+        self.grid_columnconfigure(1,weight=2)
+        self.label = ttk.Label(self, text="test option", font = LARGE_FONT)
+        self.main_dir_button = ttk.Button(self, text="Choose a directory",
+                                         command=self.open_dir)
+        self.entry_text = ttk.Entry(self)
+        self.label.grid(row=2, column=2)
+        self.main_dir_button.grid(row=0)
+        self.entry_text.grid(row=2)
     def on_button(self, event):
-        gotvar = self.entry.get()
+        gotvar = self.entry_text.get()
         self.label.config(text=gotvar)
+
+    def open_dir(self):
+        print("open dir activated")
+        self.working_dir = tk.filedialog.askdirectory()
+        print(self.working_dir)
 
 
 

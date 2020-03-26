@@ -12,52 +12,69 @@ class ControlFrame(tk.Frame):
         self.grid_rowconfigure(3, weight=3) # other options
         self.grid_columnconfigure(0, weight=1)
         self.grid_columnconfigure(1,weight=2)
+        # vars
         self.label_text_update = tk.StringVar()
         self.label_text_update.set("Default")
         self.entry_text = ttk.Entry(self, textvariable=self.label_text_update)
-        self.label = ttk.Label(self, textvariable=self.label_text_update)
+        self.label = ttk.Label(self, textvariable=self.label_text_update,width=10)
         self.current_dir_listbox = tk.Listbox(self, font = controller.small_font,
                                               width=25, height=1, bd=0,relief="flat")
         self.choose_dir_button = ttk.Button(self, text="Choose a directory",
                                             command=self.open_dir)
+        self.abf_path_dict = {}
+        self.current_listbox_selected_path = None
+        self.current_listbox_selected_path_short_name = None
+
         # setup scrollbox for files
-        self.list_of_files_scrollbox = tk.Listbox(self)
+        self.list_of_files_scrollbox = tk.Listbox(self,width=25,height=25,
+                                                  font=controller.large_font) #, selectmode=tk.MULTIPLE) # for future implementation
         self.list_of_files_scrollbox.insert(0,"No abf files found")
         self.list_of_files_scrollbar = tk.Scrollbar(self, orient="vertical")
         self.list_of_files_scrollbar.config(command=self.list_of_files_scrollbox.yview)
         self.list_of_files_scrollbox.config(yscrollcommand=self.list_of_files_scrollbar.set)
-
         # layout
-        self.list_of_files_scrollbar.grid(row=2,column=1,sticky="ns")
+        self.list_of_files_scrollbar.grid(row=2,column=1,sticky="ens")
         self.list_of_files_scrollbox.grid(row=2,column=0, sticky="ns",padx=5)
         self.label.grid(row=3, column=2)
         self.choose_dir_button.grid(row=0)
         self.current_dir_listbox.grid(row=1, sticky="nsew", padx=5)
-        self.entry_text.grid(row=3)
+        self.entry_text.grid(row=3, sticky="ew")
+
+    def get_list_of_files_scrollbox_selection(self, event):
+        ind = self.list_of_files_scrollbox.curselection()
+        sel = self.list_of_files_scrollbox.get(ind)
+        try:
+            self.current_listbox_selected_path = self.abf_path_dict[sel]
+            self.current_listbox_selected_path_short_name = sel
+        except:
+            print("couldn't find it")
+        print(self.current_listbox_selected_path)
 
     def add_files_to_listbox(self):
         self.list_of_files_scrollbox.delete(0,tk.END)
-        keys_sorted = sorted([k for k in self.abf_list_dict.keys()])
+        keys_sorted = sorted([k for k in self.abf_path_dict.keys()])
         for abf_file in keys_sorted:
             self.list_of_files_scrollbox.insert(tk.END, abf_file)
+
 
     def set_listbox_empty(self):
         self.list_of_files_scrollbox.delete(0,tk.END)
         self.list_of_files_scrollbox.insert(0, "No abf files found")
-        self.abf_list_dict = {}
+        self.abf_path_dict = {}
 
     def list_abfs(self):
         abf_list = [i for i in os.listdir(self.working_dir) if i.endswith(".abf")]
-        self.abf_list_dict = {}
         for item in abf_list:
-            self.abf_list_dict[item] = os.path.join(self.working_dir,item)
+            self.abf_path_dict[item] = os.path.join(self.working_dir,item)
         if len(abf_list) ==0:
             self.set_listbox_empty()
         else:
             self.add_files_to_listbox()
 
     def set_choose_dir_listbox(self):
+        self.current_dir_listbox.delete(0,tk.END)
         self.current_dir_listbox.insert(tk.END, self.working_dir)
+
 
     def open_dir(self):
         self.working_dir = tk.filedialog.askdirectory()

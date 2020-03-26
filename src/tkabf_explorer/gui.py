@@ -1,6 +1,6 @@
 import tkinter as tk
 from tkinter import ttk
-
+import sys
 from controlframe import ControlFrame
 from plotframe import PlotFrame
 
@@ -19,16 +19,22 @@ class TkAbfExplorer(tk.Tk):
         container.grid_columnconfigure(0, weight=1)
         container.grid_rowconfigure(0, weight=1)
         container.grid_columnconfigure(1, weight=3)
-        # class vars
-        container.example = "container example"
         # two main frames
-        control_frame = ControlFrame(container, self)
-        plot_frame = PlotFrame(container, self)
+        self.control_frame = ControlFrame(container, self)
+        self.plot_frame = PlotFrame(container, self)
+
         # frame placement
-        control_frame.grid(row=0,column=0, sticky="nsew")
-        plot_frame.grid(row=0,column=1, sticky="nsew")
+        self.control_frame.grid(row=0,column=0, sticky="nsew")
+        self.plot_frame.grid(row=0,column=1, sticky="nsew")
         # events
-        #self.bind("<Tab>", control_frame.on_button)
+        self.bind("<Tab>", self.outer_test_method)#control_frame.get_list_of_files_scrollbox_selection)
+        self.bind("q", sys.exit)
+    def outer_test_method(self, event):
+        self.control_frame.get_list_of_files_scrollbox_selection(event)
+        print(f"current selected path is {self.control_frame.current_listbox_selected_path}")
+        print(f"current short name is {self.control_frame.current_listbox_selected_path_short_name}")
+        #print(f"from parent, vars are: {container.current_listbox_selected_path}\n{container.current_listbox_selected_path_short_name}")
+
 
 app = TkAbfExplorer()
 app.mainloop()

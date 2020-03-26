@@ -4,6 +4,7 @@ import sys
 from controlframe import ControlFrame
 from plotframe import PlotFrame
 
+import pyabf
 
 class TkAbfExplorer(tk.Tk):
     def __init__(self, *args, **kwargs):
@@ -33,7 +34,16 @@ class TkAbfExplorer(tk.Tk):
         self.control_frame.get_list_of_files_scrollbox_selection(event)
         print(f"current selected path is {self.control_frame.current_listbox_selected_path}")
         print(f"current short name is {self.control_frame.current_listbox_selected_path_short_name}")
+        self.read_abf()
         #print(f"from parent, vars are: {container.current_listbox_selected_path}\n{container.current_listbox_selected_path_short_name}")
+    def read_abf(self):
+        try:
+            abf = pyabf.ABF(self.control_frame.current_listbox_selected_path)
+            self.plot_frame.x = abf.sweepX
+            self.plot_frame.y = abf.sweepY
+            self.plot_frame.plot()
+        except Exception as e:
+            print(f"Not a valid abf, exception: {e}")
 
 
 app = TkAbfExplorer()

@@ -12,3 +12,10 @@ A simple python tkinter based gui to view and perform semi-automated analysis on
 The idea is to provide a *simple*, cross platform (shar-able) app for viewing and simple semi-automated analysis. This is in progress, I wouldn't use it yet!
 
 
+* useful tkinter links:
+
+- https://docs.python.org/3/library/tkinter.ttk.html
+- https://realpython.com/python-gui-tkinter/
+- https://wiki.python.org/moin/PyQt/GUI_Testing
+- https://www.tutorialspoint.com/python/tk_scrollbar.htmhttps://effbot.org/tkinterbook/scrollbar.htm
+- https://stackoverflow.com/questions/12124350/how-to-update-the-contents-of-a-figurecanvastkagg

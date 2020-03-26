@@ -13,6 +13,7 @@ class ControlFrame(tk.Frame):
         self.grid_columnconfigure(0, weight=1)
         self.grid_columnconfigure(1,weight=2)
         # vars
+        self.starting_dir_for_selection = os.path.expanduser("~")
         self.label_text_update = tk.StringVar()
         self.label_text_update.set("Default")
         self.entry_text = ttk.Entry(self, textvariable=self.label_text_update)
@@ -74,9 +75,13 @@ class ControlFrame(tk.Frame):
     def set_choose_dir_listbox(self):
         self.current_dir_listbox.delete(0,tk.END)
         self.current_dir_listbox.insert(tk.END, self.working_dir)
-
+        self.starting_dir_for_selection = self.working_dir
 
     def open_dir(self):
-        self.working_dir = tk.filedialog.askdirectory()
+        if os.path.exists(self.starting_dir_for_selection):
+            starting_dir = self.starting_dir_for_selection
+        else:
+            starting_dir = os.path.expanduser("~")
+        self.working_dir = tk.filedialog.askdirectory(initialdir=starting_dir)
         self.list_abfs()
         self.set_choose_dir_listbox()

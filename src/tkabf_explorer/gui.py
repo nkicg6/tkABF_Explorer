@@ -37,9 +37,14 @@ class TkAbfExplorer(tk.Tk):
         self.bind("<Tab>", self.outer_test_method)#control_frame.get_list_of_files_scrollbox_selection)
         self.bind("q", sys.exit)
 
-    def outer_test_method(self, event):
-        self.control_frame.get_list_of_files_scrollbox_selection(event)
+    def update_meta(self, event):
+        self.get_abf_selection()
+        # other parsing methods to update metadata.
         self.read_abf()
+
+    def get_abf_selection(self):
+        """sets path_current_selection and short_name_current_selection"""
+        self.path_current_selection, self.short_name_current_selection = self.control_frame.get_list_of_files_scrollbox_selection(event)
 
     def add_plottable(self):
         self.trace_frame.populate_plot_listboxes(self.plottable_items)

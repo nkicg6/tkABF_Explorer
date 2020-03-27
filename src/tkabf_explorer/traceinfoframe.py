@@ -12,8 +12,6 @@ class TraceInfoFrame(tk.Frame):
         self.grid_columnconfigure(3, weight=50)
         self.grid_columnconfigure(4, weight=25)
         # vars
-        self.file_name = "none selected"
-        self.protocol_name = "none selected"
         self.current_sweep = tk.IntVar()
         self.current_channel = tk.IntVar()
         self.label_width = 10
@@ -39,9 +37,24 @@ class TraceInfoFrame(tk.Frame):
         self.trace_vars_frame = tk.Frame(self, bg="green")
 
         self.trace_vars_frame_protocol_label = tk.Label(self.trace_vars_frame,
-                                                        text="Protocol: ", width=12,height=1, font=controller.large_font)
+                                                        text="Protocol: ", width=20, height=1,
+                                                        font=controller.large_font, anchor="e")
         self.trace_vars_frame_protocol_text = tk.Label(self.trace_vars_frame,
-                                                        text=self.protocol_name, width=25,height=1, font=controller.large_font)
+                                                        text="None selected", width=20,height=1,
+                                                       font=controller.large_font)
+        self.trace_vars_frame_file_label = tk.Label(self.trace_vars_frame,
+                                                        text="File: ", width=20,height=1,
+                                                        font=controller.large_font, anchor="e")
+        self.trace_vars_frame_file_text = tk.Label(self.trace_vars_frame,
+                                                        text="None selected", width=20,height=1,
+                                                       font=controller.large_font)
+        self.trace_vars_frame_sampling_rate_label = tk.Label(self.trace_vars_frame,
+                                                        text="Sampling rate (Hz): ", width=20, height=1,
+                                                             font=controller.large_font, anchor="e")
+        self.trace_vars_frame_sampling_rate_text = tk.Label(self.trace_vars_frame,
+                                                        text="None selected", width=20,height=1,
+                                                       font=controller.large_font)
+
         # trace_vars_canvas setup
         self.trace_vars_frame.grid_columnconfigure(0,weight=1)
         self.trace_vars_frame.grid_rowconfigure(0,weight=1)
@@ -59,8 +72,14 @@ class TraceInfoFrame(tk.Frame):
         self.plot_options_frame.grid(column=3,row=0,rowspan=2, sticky="nsew")
 
         self.trace_vars_frame.grid(column=4,rowspan=2,row=0, sticky="nsew")
-        self.trace_vars_frame_protocol_label.grid(column=0,row=0,sticky="w")
-        self.trace_vars_frame_protocol_text.grid(column=1,row=0,sticky="ew")
+
+        self.trace_vars_frame_file_label.grid(column=0,row=0,sticky="w")
+        self.trace_vars_frame_file_text.grid(column=1,row=0,sticky="ew")
+        self.trace_vars_frame_protocol_label.grid(column=0,row=1,sticky="w")
+        self.trace_vars_frame_protocol_text.grid(column=1,row=1,sticky="ew")
+
+        self.trace_vars_frame_sampling_rate_label.grid(column=0,row=2,sticky="w")
+        self.trace_vars_frame_sampling_rate_text.grid(column=1,row=2,sticky="ew")
 
     def populate_plot_listboxes(self, items):
         self.top_plot_listbox.delete(0,tk.END)
@@ -74,10 +93,28 @@ class TraceInfoFrame(tk.Frame):
 
     def add_sweeps_to_listbox(self, sweeplist):
         self.sweep_listbox.delete(0,tk.END)
-        for sweep in sweeplist:
+
+        for sweep in sorted(sweeplist):
             self.sweep_listbox.insert(tk.END, "Sweep: "+ str(sweep))
         self.sweep_listbox.selection_set(0)
 
-    def update_trace_name(self, trace_name):
-        self.protocol_name = trace_name
+    def _update_trace_name(self, trace_name):
         self.trace_vars_frame_protocol_text.config(text=trace_name)
+    def _update_file_name(self, file_name):
+        self.trace_vars_frame_file_text.config(text=file_name)
+    def _update_sampling_rate(self, sampling_rate):
+        self.trace_vars_frame_sampling_rate_text(text=sampling_rate)
+
+    def update_trace_info_frame(self, update_dict):
+        self._update_trace_name(update_dict['trace_name'])
+        self._update_file_name(update_dict['file_name'])
+        self._update_sampling_rate(update_dict['sampling_rate'])
+
+    def get_bottom_plot_selection(self):
+        if not self.bottom_plot_listbox.curselection():
+            print("get_bottom_plot_selection nothing selected")
+            return None
+        return self.bottom_plot_listbox.curselection()
+
+    def get_sweep_selection(self):
+        return self.sweep_listbox.curselection()

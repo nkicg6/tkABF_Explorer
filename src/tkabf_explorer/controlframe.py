@@ -19,9 +19,6 @@ class ControlFrame(tk.Frame):
         self.choose_dir_button = ttk.Button(self, text="Choose a directory",
                                             command=self.open_dir)
         self.abf_path_dict = {}
-        self.current_listbox_selected_path = None
-        self.current_listbox_selected_path_short_name = None
-
         # setup scrollbox for files
         self.list_of_files_scrollbox = tk.Listbox(self,width=25,height=25,
                                                   font=controller.large_font,
@@ -40,11 +37,11 @@ class ControlFrame(tk.Frame):
         ind = self.list_of_files_scrollbox.curselection()
         sel = self.list_of_files_scrollbox.get(ind)
         try:
-            self.current_listbox_selected_path = self.abf_path_dict[sel]
-            self.current_listbox_selected_path_short_name = sel
+            return self.abf_path_dict[sel], sel
+            #self.current_listbox_selected_path = self.abf_path_dict[sel]
+            #self.current_listbox_selected_path_short_name = sel
         except:
             print("couldn't find it")
-        print(self.current_listbox_selected_path)
 
     def add_files_to_listbox(self):
         self.list_of_files_scrollbox.delete(0,tk.END)

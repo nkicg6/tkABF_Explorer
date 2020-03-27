@@ -9,15 +9,10 @@ class ControlFrame(tk.Frame):
         self.grid_rowconfigure(0, weight=1) # choose dir button
         self.grid_rowconfigure(1, weight=1) # dir display
         self.grid_rowconfigure(2, weight=8) # other options
-        self.grid_rowconfigure(3, weight=3) # other options
         self.grid_columnconfigure(0, weight=1)
         self.grid_columnconfigure(1,weight=2)
         # vars
         self.starting_dir_for_selection = os.path.expanduser("~")
-        self.label_text_update = tk.StringVar()
-        self.label_text_update.set("Default")
-        self.entry_text = ttk.Entry(self, textvariable=self.label_text_update)
-        self.label = ttk.Label(self, textvariable=self.label_text_update,width=10)
         self.current_dir_listbox = tk.Listbox(self, font = controller.small_font,
                                               width=25, height=1, bd=0,relief="flat")
         self.choose_dir_button = ttk.Button(self, text="Choose a directory",
@@ -35,11 +30,9 @@ class ControlFrame(tk.Frame):
         self.list_of_files_scrollbox.config(yscrollcommand=self.list_of_files_scrollbar.set)
         # layout
         self.list_of_files_scrollbar.grid(row=2,column=1,sticky="ens")
-        self.list_of_files_scrollbox.grid(row=2,column=0, sticky="ns",padx=5)
-        self.label.grid(row=3, column=2)
+        self.list_of_files_scrollbox.grid(row=2,column=0, sticky="ns",padx=5,pady=5)
         self.choose_dir_button.grid(row=0)
-        self.current_dir_listbox.grid(row=1, sticky="nsew", padx=5)
-        self.entry_text.grid(row=3, sticky="ew")
+        self.current_dir_listbox.grid(row=1, sticky="ew", padx=5,pady=1)
 
     def get_list_of_files_scrollbox_selection(self, event):
         ind = self.list_of_files_scrollbox.curselection()
@@ -56,7 +49,6 @@ class ControlFrame(tk.Frame):
         keys_sorted = sorted([k for k in self.abf_path_dict.keys()])
         for abf_file in keys_sorted:
             self.list_of_files_scrollbox.insert(tk.END, abf_file)
-
 
     def set_listbox_empty(self):
         self.list_of_files_scrollbox.delete(0,tk.END)

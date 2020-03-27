@@ -19,3 +19,8 @@ The idea is to provide a *simple*, cross platform (shar-able) app for viewing an
 - https://wiki.python.org/moin/PyQt/GUI_Testing
 - https://www.tutorialspoint.com/python/tk_scrollbar.htmhttps://effbot.org/tkinterbook/scrollbar.htm
 - https://stackoverflow.com/questions/12124350/how-to-update-the-contents-of-a-figurecanvastkagg
+* linking widgets
+self.label_text_update = tk.StringVar()
+self.label_text_update.set("Default")
+self.entry_text = ttk.Entry(self, textvariable=self.label_text_update)
+self.label = ttk.Label(self, textvariable=self.label_text_update,width=10)

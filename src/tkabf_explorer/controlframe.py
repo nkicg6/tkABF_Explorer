@@ -1,6 +1,7 @@
 import os
 import tkinter as tk
 from tkinter import ttk
+DEBUG_DIR = "/Users/nick/Dropbox/lab_notebook/projects_and_data/mnc/analysis_and_data/extracellular_lfp/data/"
 
 class ControlFrame(tk.Frame):
     def __init__(self, parent, controller):
@@ -12,7 +13,7 @@ class ControlFrame(tk.Frame):
         self.grid_columnconfigure(0, weight=1)
         self.grid_columnconfigure(1,weight=2)
         # vars
-        self.starting_dir_for_selection = os.path.expanduser("~")
+        self.starting_dir_for_selection = DEBUG_DIR#os.path.expanduser("~")
         self.current_dir_listbox = tk.Listbox(self, font = controller.small_font,
                                               width=25, height=1, bd=0,relief="flat")
         self.choose_dir_button = ttk.Button(self, text="Choose a directory",
@@ -23,7 +24,8 @@ class ControlFrame(tk.Frame):
 
         # setup scrollbox for files
         self.list_of_files_scrollbox = tk.Listbox(self,width=25,height=25,
-                                                  font=controller.large_font) #, selectmode=tk.MULTIPLE) # for future implementation
+                                                  font=controller.large_font,
+                                                  exportselection=False) #, selectmode=tk.MULTIPLE) # for future implementation
         self.list_of_files_scrollbox.insert(0,"No abf files found")
         self.list_of_files_scrollbar = tk.Scrollbar(self, orient="vertical")
         self.list_of_files_scrollbar.config(command=self.list_of_files_scrollbox.yview)
@@ -49,6 +51,7 @@ class ControlFrame(tk.Frame):
         keys_sorted = sorted([k for k in self.abf_path_dict.keys()])
         for abf_file in keys_sorted:
             self.list_of_files_scrollbox.insert(tk.END, abf_file)
+        self.list_of_files_scrollbox.selection_set(0)
 
     def set_listbox_empty(self):
         self.list_of_files_scrollbox.delete(0,tk.END)

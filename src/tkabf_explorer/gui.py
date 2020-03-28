@@ -5,6 +5,7 @@ from controlframe import ControlFrame
 from plotframe import PlotFrame
 from traceinfoframe import TraceInfoFrame
 import pyabf
+import numpy as np
 
 # get all input for plotting, trigger with tab
 
@@ -50,6 +51,15 @@ class TkAbfExplorer(tk.Tk):
         """sets path_current_selection and short_name_current_selection"""
         self.path_current_selection, self.short_name_current_selection = self.control_frame.get_list_of_files_scrollbox_selection(event)
 
+    def _calculate_mean_sweeps(self, plot_opts):
+        abf = pyabf.ABF(plot_opts['filepath'])
+        acc = []
+        for sweep in abf.sweepList:
+            abf.setSweep(sweep)
+            acc.append(abf.sweepY)
+        return np.asarray(acc).mean(axis=0)
+
+
     def _make_metadata_dict(self):
         """creates dictionary of file metadata to populate gui frames"""
         abf = pyabf.ABF(self.path_current_selection, loadData=False)
@@ -70,9 +80,13 @@ class TkAbfExplorer(tk.Tk):
     def _read_abf_data(self, plot_opts):
         abf = pyabf.ABF(plot_opts['filepath'])
         abf.setSweep(sweepNumber=plot_opts['sweep'], channel=0)
-        self.plot_frame.sweep_label = "sweep "+ str(plot_opts['sweep'])
         self.plot_frame.x = abf.sweepX
-        self.plot_frame.y = abf.sweepY
+        if plot_opts['plot_mean_state'] == True:
+            self.plot_frame.y = self._calculate_mean_sweeps(plot_opts)
+            self.plot_frame.sweep_label = self.short_name_current_selection.replace(".abf","")+" mean of all sweeps"
+        if plot_opts['plot_mean_state'] == False:
+            self.plot_frame.y = abf.sweepY
+            self.plot_frame.sweep_label = self.short_name_current_selection.replace(".abf","")+" sweep "+ str(plot_opts['sweep'])
         self.plot_frame.topy_label = abf.sweepLabelY
         self.plot_frame.x_label = abf.sweepLabelX
         if plot_opts['bottom_plot'] == 'c':

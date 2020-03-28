@@ -33,7 +33,8 @@ class PlotFrame(tk.Frame):
 
     def update_plot(self):
         self.figure.suptitle(self.top_plot_label, fontsize=16)
-        self.ax1.plot(self.x, self.y, label=self.sweep_label)
+        self.ax1.plot(self.x, self.y, label=self.sweep_label, lw=4)
+        self.ax1.set_xticklabels([])
         self.ax1.set_ylabel(self.topy_label)
         self.ax2.plot(self.x, self.smallplot_y, color="black")
         self.ax2.set_ylabel(self.smallplot_y_label)
@@ -42,7 +43,7 @@ class PlotFrame(tk.Frame):
         self.figcanvas.draw()
         self.figcanvas.get_tk_widget().pack(fill=tk.BOTH, expand=1,padx=5, pady=5)
         self.toolbar.update()
-        self.figcanvas._tkcanvas.pack(side=tk.BOTTOM,expand=1)
+        self.figcanvas._tkcanvas.pack(side=tk.BOTTOM,expand=1,padx=5,pady=5)
 
     def clear_plot(self, event):
         print("clearing plot called")

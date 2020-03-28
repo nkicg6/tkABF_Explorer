@@ -5,15 +5,15 @@ from controlframe import ControlFrame
 from plotframe import PlotFrame
 from traceinfoframe import TraceInfoFrame
 import pyabf
-# TODO update sweep select listbox on metadata update too
+
 # get all input for plotting, trigger with tab
-# add use mean of sweeps button
 
 class TkAbfExplorer(tk.Tk):
     def __init__(self, *args, **kwargs):
         tk.Tk.__init__(self, *args, **kwargs)
         tk.Tk.wm_title(self,"tkABF Viewer v0.1-dev")
         self.geometry("950x800")
+        self.testvar = "I am a parent test var"
         self.large_font = ("Verdana", 14)
         self.medium_font = ("Verdana", 12)
         self.small_font = ("Verdana", 10)
@@ -38,7 +38,8 @@ class TkAbfExplorer(tk.Tk):
 
         ### events ###
         #self.bind("<Tab>", self.update_meta)#control_frame.get_list_of_files_scrollbox_selection)
-        self.control_frame.list_of_files_scrollbox.bind('<<ListboxSelect>>', self.update_meta)
+        self.control_frame.list_of_files_scrollbox.bind('<<ListboxSelect>>',
+                                                        self.update_meta)
         self.bind("q", sys.exit)
 
      ### methods ###

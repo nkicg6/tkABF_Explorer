@@ -143,13 +143,19 @@ class TraceInfoFrame(tk.Frame):
         self._populate_plot_listboxes(update_dict['plotable_items'])
 
     def _get_bottom_plot_listbox_selection(self):
-        pass
+        if not self.bottom_plot_listbox.curselection():
+            print("get_bottom_plot_selection nothing selected")
+            return None
+        return self.bottom_plot_listbox.curselection()
 
     def _get_sweep_listbox_selection(self):
-        pass
+        if not self.sweep_listbox.curselection():
+            print("get_bottom_plot_selection nothing selected")
+            return None
+        return self.sweep_listbox.curselection()
 
     def _get_plot_mean_sweeps_option_state(self):
-        pass
+        return self.plot_mean_sweeps_option.get()
 
     def get_plot_options(self):
         """composed function returns a map of options for master to plot"""
@@ -158,13 +164,3 @@ class TraceInfoFrame(tk.Frame):
         plot_options["sweep"] = self._get_sweep_listbox_selection()
         plot_options["plot_mean_state"] = self._get_plot_mean_sweeps_option_state()
         return plot_options
-
-        pass
-    def get_bottom_plot_selection(self):
-        if not self.bottom_plot_listbox.curselection():
-            print("get_bottom_plot_selection nothing selected")
-            return None
-        return self.bottom_plot_listbox.curselection()
-
-    def get_sweep_selection(self):
-        return self.sweep_listbox.curselection()

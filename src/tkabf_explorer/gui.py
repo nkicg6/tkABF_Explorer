@@ -7,7 +7,9 @@ from traceinfoframe import TraceInfoFrame
 import pyabf
 import numpy as np
 
-# get all input for plotting, trigger with tab
+# TODO handle case when there is not a channel 1. (patch recordings)
+# TODO add default viewport options
+# TODO prettier/better plot formatting
 
 class TkAbfExplorer(tk.Tk):
     def __init__(self, *args, **kwargs):

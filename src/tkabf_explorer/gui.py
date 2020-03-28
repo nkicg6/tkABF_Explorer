@@ -5,6 +5,9 @@ from controlframe import ControlFrame
 from plotframe import PlotFrame
 from traceinfoframe import TraceInfoFrame
 import pyabf
+# TODO update sweep select listbox on metadata update too
+# get all input for plotting, trigger with tab
+# add use mean of sweeps button
 
 class TkAbfExplorer(tk.Tk):
     def __init__(self, *args, **kwargs):
@@ -38,7 +41,7 @@ class TkAbfExplorer(tk.Tk):
         self.control_frame.list_of_files_scrollbox.bind('<<ListboxSelect>>', self.update_meta)
         self.bind("q", sys.exit)
 
-        ### methods ###
+     ### methods ###
 
     def update_meta(self, event):
         self._get_abf_selection(event)
@@ -53,11 +56,13 @@ class TkAbfExplorer(tk.Tk):
         self.path_current_selection, self.short_name_current_selection = self.control_frame.get_list_of_files_scrollbox_selection(event)
 
     def _make_metadata_dict(self):
+        """creates dictionary of file metadata to populate gui frames"""
         abf = pyabf.ABF(self.path_current_selection, loadData=False)
         self.current_meta_dict = {}
         self.current_meta_dict['protocol_name'] = abf.protocol
         self.current_meta_dict['file_name'] = self.short_name_current_selection
         self.current_meta_dict['sampling_rate'] = abf.dataPointsPerMs
+        self.current_meta_dict['sweepList'] = abf.sweepList
 
     def _update_trace_info_frame(self):
         self.trace_frame.update_trace_info_frame(self.current_meta_dict)

@@ -12,8 +12,6 @@ class TraceInfoFrame(tk.Frame):
         self.grid_columnconfigure(3, weight=50)
         self.grid_columnconfigure(4, weight=25)
         # vars
-        self.current_sweep = tk.IntVar()
-        self.current_channel = tk.IntVar()
         self.label_width = 10
         self.label_height = 10
         self.top_plot_canvas = tk.Canvas(self, bg="white", width=self.label_width,
@@ -91,9 +89,8 @@ class TraceInfoFrame(tk.Frame):
             self.bottom_plot_listbox.insert(tk.END, item)
         self.bottom_plot_listbox.selection_set(1)
 
-    def add_sweeps_to_listbox(self, sweeplist):
+    def _add_sweeps_to_listbox(self, sweeplist):
         self.sweep_listbox.delete(0,tk.END)
-
         for sweep in sorted(sweeplist):
             self.sweep_listbox.insert(tk.END, "Sweep: "+ str(sweep))
         self.sweep_listbox.selection_set(0)
@@ -111,6 +108,7 @@ class TraceInfoFrame(tk.Frame):
         self._update_protocol_name(update_dict['protocol_name'])
         self._update_file_name(update_dict['file_name'])
         self._update_sampling_rate(update_dict['sampling_rate'])
+        self._add_sweeps_to_listbox(update_dict['sweepList'])
 
     def get_bottom_plot_selection(self):
         if not self.bottom_plot_listbox.curselection():

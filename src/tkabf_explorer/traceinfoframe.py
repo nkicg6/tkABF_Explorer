@@ -34,26 +34,26 @@ class TraceInfoFrame(tk.Frame):
         self.sweep_listbox = tk.Listbox(self, width=5,height=6,
                                         font=controller.large_font,
                                         exportselection=False)
-        self.trace_vars_frame = tk.Frame(self, bg="green")
+        self.trace_vars_frame = tk.Frame(self, bg="white")
 
         self.trace_vars_frame_protocol_label = tk.Label(self.trace_vars_frame,
                                                         text="Protocol: ", width=20, height=1,
                                                         font=controller.large_font, anchor="e")
         self.trace_vars_frame_protocol_text = tk.Label(self.trace_vars_frame,
                                                         text="None selected", width=20,height=1,
-                                                       font=controller.large_font)
+                                                       font=controller.large_font, anchor="w")
         self.trace_vars_frame_file_label = tk.Label(self.trace_vars_frame,
                                                         text="File: ", width=20,height=1,
                                                         font=controller.large_font, anchor="e")
         self.trace_vars_frame_file_text = tk.Label(self.trace_vars_frame,
                                                         text="None selected", width=20,height=1,
-                                                       font=controller.large_font)
+                                                       font=controller.large_font, anchor="w")
         self.trace_vars_frame_sampling_rate_label = tk.Label(self.trace_vars_frame,
-                                                        text="Sampling rate (Hz): ", width=20, height=1,
+                                                        text="Sampling rate (kHz): ", width=20, height=1,
                                                              font=controller.large_font, anchor="e")
         self.trace_vars_frame_sampling_rate_text = tk.Label(self.trace_vars_frame,
                                                         text="None selected", width=20,height=1,
-                                                       font=controller.large_font)
+                                                            font=controller.large_font, anchor="w")
 
         # trace_vars_canvas setup
         self.trace_vars_frame.grid_columnconfigure(0,weight=1)
@@ -84,7 +84,7 @@ class TraceInfoFrame(tk.Frame):
     def populate_plot_listboxes(self, items):
         self.top_plot_listbox.delete(0,tk.END)
         self.top_plot_listbox.insert(tk.END, "\n")
-        self.top_plot_listbox.insert(tk.END, "Choose what you want in the small plot below")
+        self.top_plot_listbox.insert(tk.END, "Choose what you want in the \nsmall plot below")
         self.top_plot_listbox.insert(tk.END, "\n")
         self.bottom_plot_listbox.delete(0,tk.END)
         for item in items:
@@ -98,15 +98,17 @@ class TraceInfoFrame(tk.Frame):
             self.sweep_listbox.insert(tk.END, "Sweep: "+ str(sweep))
         self.sweep_listbox.selection_set(0)
 
-    def _update_trace_name(self, trace_name):
-        self.trace_vars_frame_protocol_text.config(text=trace_name)
+    def _update_protocol_name(self, protocol_name):
+        self.trace_vars_frame_protocol_text.config(text=protocol_name)
+
     def _update_file_name(self, file_name):
         self.trace_vars_frame_file_text.config(text=file_name)
+
     def _update_sampling_rate(self, sampling_rate):
-        self.trace_vars_frame_sampling_rate_text(text=sampling_rate)
+        self.trace_vars_frame_sampling_rate_text.config(text=sampling_rate)
 
     def update_trace_info_frame(self, update_dict):
-        self._update_trace_name(update_dict['trace_name'])
+        self._update_protocol_name(update_dict['protocol_name'])
         self._update_file_name(update_dict['file_name'])
         self._update_sampling_rate(update_dict['sampling_rate'])
 

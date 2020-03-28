@@ -31,28 +31,44 @@ class TkAbfExplorer(tk.Tk):
         self.control_frame.grid(row=0,column=0, sticky="nsew")
         self.plot_frame.grid(row=0,column=1, sticky="nsew")
         self.trace_frame.grid(row=1,columnspan=2, sticky="nsew")
-        self.plottable_items = ["Digital in", "Channel 2"]
+        self.plottable_items = ["Command waveform", "Channel 2"]
 
-        # events
-        self.bind("<Tab>", self.outer_test_method)#control_frame.get_list_of_files_scrollbox_selection)
+        ### events ###
+        #self.bind("<Tab>", self.update_meta)#control_frame.get_list_of_files_scrollbox_selection)
+        self.control_frame.list_of_files_scrollbox.bind('<<ListboxSelect>>', self.update_meta)
         self.bind("q", sys.exit)
 
-    def update_meta(self, event):
-        self.get_abf_selection()
-        # other parsing methods to update metadata.
-        self.read_abf()
+        ### methods ###
 
-    def get_abf_selection(self):
+    def update_meta(self, event):
+        self._get_abf_selection(event)
+        self._make_metadata_dict()
+        self._update_trace_info_frame()
+        self._update_trace_plottable_options()
+        print(f"update meta called with event {event}")
+        # other parsing methods to update metadata.
+
+    def _get_abf_selection(self, event):
         """sets path_current_selection and short_name_current_selection"""
         self.path_current_selection, self.short_name_current_selection = self.control_frame.get_list_of_files_scrollbox_selection(event)
 
-    def add_plottable(self):
+    def _make_metadata_dict(self):
+        abf = pyabf.ABF(self.path_current_selection, loadData=False)
+        self.current_meta_dict = {}
+        self.current_meta_dict['protocol_name'] = abf.protocol
+        self.current_meta_dict['file_name'] = self.short_name_current_selection
+        self.current_meta_dict['sampling_rate'] = abf.dataPointsPerMs
+
+    def _update_trace_info_frame(self):
+        self.trace_frame.update_trace_info_frame(self.current_meta_dict)
+
+    def _update_trace_plottable_options(self):
         self.trace_frame.populate_plot_listboxes(self.plottable_items)
 
     def read_abf(self):
         try:
             abf = pyabf.ABF(self.control_frame.current_listbox_selected_path)
-            self.plot_frame.x = abf.sweepX
+            self.plot_frame.x = abXSf.sweepX
             self.plot_frame.y = abf.sweepY
             self.plot_frame.c = abf.sweepC
             self.plot_frame.plot()

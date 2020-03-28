@@ -9,11 +9,13 @@ class TraceInfoFrame(tk.Frame):
         self.grid_columnconfigure(0, weight=1)
         self.grid_columnconfigure(1, weight=100)
         self.grid_columnconfigure(2, weight=100)
-        self.grid_columnconfigure(3, weight=50)
-        self.grid_columnconfigure(4, weight=25)
+        self.grid_columnconfigure(3, weight=25)
+        self.grid_columnconfigure(4, weight=50)
         # vars
         self.label_width = 10
         self.label_height = 10
+        self.plot_mean_sweeps_option = tk.BooleanVar()
+        self.plot_mean_sweeps_option.set(False)
         self.top_plot_canvas = tk.Canvas(self, bg="white", width=self.label_width,
                                          height=self.label_height)
         self.top_plot_canvas.create_text(8,25,angle=90, anchor="e",
@@ -22,7 +24,10 @@ class TraceInfoFrame(tk.Frame):
                                             height=self.label_height)
         self.bottom_plot_canvas.create_text(8,12,angle=90, anchor="e",
                                          text="bottom",font=controller.medium_font)
-        self.plot_options_frame = tk.Frame(self, bg="yellow")
+        self.plot_options_frame = tk.Frame(self, bg="white")
+        self.plot_options_frame_mean_checkbox = tk.Checkbutton(self.plot_options_frame, text="Plot mean of sweeps?", width=20,
+                                                               var=self.plot_mean_sweeps_option, onvalue=True, offvalue=False,
+                                                               font=controller.large_font, command=self._toggle_mean, anchor="w")
         self.top_plot_listbox = tk.Listbox(self,width=5,height=3,
                                            font=controller.small_font,
                                            exportselection=False)
@@ -78,8 +83,12 @@ class TraceInfoFrame(tk.Frame):
 
         self.trace_vars_frame_sampling_rate_label.grid(column=0,row=2,sticky="w")
         self.trace_vars_frame_sampling_rate_text.grid(column=1,row=2,sticky="ew")
+        self.plot_options_frame_mean_checkbox.grid(column=0,row=0,sticky="nsew")
 
-    def populate_plot_listboxes(self, items):
+    def _toggle_mean(self):
+        print(f"the value of the toggle is {self.plot_mean_sweeps_option.get()}\n")
+
+    def _populate_plot_listboxes(self, items):
         self.top_plot_listbox.delete(0,tk.END)
         self.top_plot_listbox.insert(tk.END, "\n")
         self.top_plot_listbox.insert(tk.END, "Choose what you want in the \nsmall plot below")
@@ -109,6 +118,7 @@ class TraceInfoFrame(tk.Frame):
         self._update_file_name(update_dict['file_name'])
         self._update_sampling_rate(update_dict['sampling_rate'])
         self._add_sweeps_to_listbox(update_dict['sweepList'])
+        self._populate_plot_listboxes(update_dict['plotable_items'])
 
     def get_bottom_plot_selection(self):
         if not self.bottom_plot_listbox.curselection():

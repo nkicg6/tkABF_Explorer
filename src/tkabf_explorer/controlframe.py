@@ -38,8 +38,6 @@ class ControlFrame(tk.Frame):
         sel = self.list_of_files_scrollbox.get(ind)
         try:
             return self.abf_path_dict[sel], sel
-            #self.current_listbox_selected_path = self.abf_path_dict[sel]
-            #self.current_listbox_selected_path_short_name = sel
         except:
             print("couldn't find it")
 

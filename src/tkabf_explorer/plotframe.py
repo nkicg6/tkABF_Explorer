@@ -13,8 +13,11 @@ class PlotFrame(tk.Frame):
         self.grid_columnconfigure(0,weight=1)
         # vars
         self.topy_label = "y"
+        self.legend_list = []
         self.x_label = "x"
-        self.top_plot_legend_label = ""
+        self.sweep_label = ""
+        self.top_plot_label = ""
+        self.smallplot_y_label = ""
         self.x = []
         self.y = []
         self.smallplot_y = []
@@ -29,14 +32,27 @@ class PlotFrame(tk.Frame):
         self.update_plot()
 
     def update_plot(self):
-        self.ax1.plot(self.x, self.y, label=self.top_plot_legend_label)
-        self.ax2.plot(self.x, self.smallplot_y)
-        self.figure.legend()
+        self.figure.suptitle(self.top_plot_label, fontsize=16)
+        self.ax1.plot(self.x, self.y, label=self.sweep_label)
+        self.ax1.set_ylabel(self.topy_label)
+        self.ax2.plot(self.x, self.smallplot_y, color="black")
+        self.ax2.set_ylabel(self.smallplot_y_label)
+        self.ax2.set_xlabel(self.x_label)
+        self.legend_list.append(self.figure.legend())
         self.figcanvas.draw()
         self.figcanvas.get_tk_widget().pack(fill=tk.BOTH, expand=1,padx=5, pady=5)
         self.toolbar.update()
         self.figcanvas._tkcanvas.pack(side=tk.BOTTOM,expand=1)
 
-    def clear_plot(self):
+    def clear_plot(self, event):
+        print("clearing plot called")
+        for i in self.legend_list:
+            i.remove()
+        self.legend_list = []
         self.ax1.clear()
         self.ax2.clear()
+        self.figure.legend()
+        self.figcanvas.draw()
+        self.figcanvas.get_tk_widget().pack(fill=tk.BOTH, expand=1,padx=5, pady=5)
+        self.toolbar.update()
+        self.figcanvas._tkcanvas.pack(side=tk.BOTTOM,expand=1)

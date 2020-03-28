@@ -101,10 +101,12 @@ class TraceInfoFrame(tk.Frame):
 
     def clear_plot(self):
         print("clear plot pressed")
+        self.controller_ref.plot_frame.clear_plot("") # sim event
         print(f"val of parent testvar is {self.controller_ref.testvar}")
 
     def update_plot(self):
         print("update plot called")
+        self.controller_ref.update_plot("")
 
     def _toggle_mean(self):
         print(f"the value of the toggle is {self.plot_mean_sweeps_option.get()}\n")
@@ -123,7 +125,7 @@ class TraceInfoFrame(tk.Frame):
     def _add_sweeps_to_listbox(self, sweeplist):
         self.sweep_listbox.delete(0,tk.END)
         for sweep in sorted(sweeplist):
-            self.sweep_listbox.insert(tk.END, "Sweep: "+ str(sweep))
+            self.sweep_listbox.insert(tk.END, "Sweep "+ str(sweep))
         self.sweep_listbox.selection_set(0)
 
     def _update_protocol_name(self, protocol_name):
@@ -144,15 +146,17 @@ class TraceInfoFrame(tk.Frame):
 
     def _get_bottom_plot_listbox_selection(self):
         if not self.bottom_plot_listbox.curselection():
-            print("get_bottom_plot_selection nothing selected")
+            print("_get_bottom_plot_selection nothing selected")
             return None
-        return self.bottom_plot_listbox.curselection()
+        sel = self.bottom_plot_listbox.get(self.bottom_plot_listbox.curselection())
+        return self.controller_ref.plotable_items[sel]
 
     def _get_sweep_listbox_selection(self):
         if not self.sweep_listbox.curselection():
-            print("get_bottom_plot_selection nothing selected")
+            print("_get_sweep_listbox_selection nothing selected")
             return None
-        return self.sweep_listbox.curselection()
+        raw = self.sweep_listbox.get(self.sweep_listbox.curselection())
+        return int(raw.strip("Sweep ")) # return an integer
 
     def _get_plot_mean_sweeps_option_state(self):
         return self.plot_mean_sweeps_option.get()
@@ -160,6 +164,7 @@ class TraceInfoFrame(tk.Frame):
     def get_plot_options(self):
         """composed function returns a map of options for master to plot"""
         plot_options = {}
+        plot_options["top_plot_channel"] = 0 # could be implemented in the future
         plot_options["bottom_plot"] = self._get_bottom_plot_listbox_selection()
         plot_options["sweep"] = self._get_sweep_listbox_selection()
         plot_options["plot_mean_state"] = self._get_plot_mean_sweeps_option_state()

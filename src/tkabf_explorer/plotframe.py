@@ -12,47 +12,48 @@ class PlotFrame(tk.Frame):
         self.grid_rowconfigure(0, weight=1)
         self.grid_columnconfigure(0,weight=1)
         # vars
-        self.topy_label = "y"
-        self.legend_list = []
-        self.x_label = "x"
-        self.sweep_label = ""
-        self.top_plot_label = ""
-        self.smallplot_y_label = ""
-        self.x = []
-        self.y = []
-        self.smallplot_y = []
+        self._default_plot_map = {"x":[], "y1":[], "x_label":"x", "y1_label":"y", "y2":[], "y2_label":"y",
+                                     "fontsize":16, "sweep_label":"", "linewidth":4, "y2_color":"black"}
+        self.current_plot_options = {}
+        self._legend_list = []
         # basic plot setup
         self.figure = Figure(figsize=(5,5), dpi=100)
         self.gs = gridspec.GridSpec(nrows=2, ncols=1, height_ratios=[2,1])
         self.ax1 = self.figure.add_subplot(self.gs[0,0])
         self.ax2 = self.figure.add_subplot(self.gs[1,0], sharex=self.ax1)
         self.figcanvas = FigureCanvasTkAgg(self.figure, self)
-        #self.canvas.grid(column=0,row=0,sticky="nsew")
         self.toolbar = NavigationToolbar2Tk(self.figcanvas, self)
+        self.toolbar.update()
         self.update_plot()
 
-    def update_plot(self):
-        self.figure.suptitle(self.top_plot_label, fontsize=16)
-        self.ax1.plot(self.x, self.y, label=self.sweep_label, lw=4)
-        self.ax1.set_ylabel(self.topy_label)
-        self.ax2.plot(self.x, self.smallplot_y, color="black")
-        self.ax2.set_ylabel(self.smallplot_y_label)
-        self.ax2.set_xlabel(self.x_label)
-        self.legend_list.append(self.figure.legend())
-        self.figcanvas.draw()
+    def update_plot(self, plot_map=None):
+        if plot_map == None:
+            print("`update_plot` called with None")
+            plot_map = self._default_plot_map
+        self.ax1.plot(plot_map['x'], plot_map['y1'],
+                      label=plot_map['sweep_label'],
+                      lw=plot_map['linewidth'])
+        self.ax1.set_ylabel(plot_map['y1_label'])
+        self.ax2.plot(plot_map['x'], plot_map['y2'],
+                      color=plot_map["y2_color"])
+        self.ax2.set_ylabel(plot_map['y2_label'])
+        self.ax2.set_xlabel(plot_map['x_label'])
+        self._legend_list.append(self.figure.legend())
         self.figcanvas.get_tk_widget().pack(fill=tk.BOTH, expand=1,padx=5, pady=5)
-        self.toolbar.update()
         self.figcanvas._tkcanvas.pack(side=tk.BOTTOM,expand=1,padx=5,pady=5)
+        self.figcanvas.draw()
 
     def clear_plot(self, event):
         print("clearing plot called")
-        for i in self.legend_list:
+        for i in self._legend_list:
             i.remove()
-        self.legend_list = []
+        self._legend_list = []
         self.ax1.clear()
         self.ax2.clear()
-        self.figure.legend()
-        self.figcanvas.draw()
-        self.figcanvas.get_tk_widget().pack(fill=tk.BOTH, expand=1,padx=5, pady=5)
+        self.update_plot(plot_map=None)
         self.toolbar.update()
-        self.figcanvas._tkcanvas.pack(side=tk.BOTTOM,expand=1)
+        #self.figure.legend()
+        #self.figcanvas.draw()
+        #self.figcanvas.get_tk_widget().pack(fill=tk.BOTH, expand=1,padx=5, pady=5)
+        #self.toolbar.update()
+        #self.figcanvas._tkcanvas.pack(side=tk.BOTTOM,expand=1)

@@ -79,35 +79,41 @@ class TkAbfExplorer(tk.Tk):
         self.trace_frame.update_trace_info_frame(self.current_meta_dict)
         print(f"update meta called with event {event}")
 
-    def _read_abf_data(self, plot_opts):
+    def _build_plot_map(self, plot_opts):
+        plot_map = {}
+        # defaults can be edited later
+        plot_map['linewidth'] = 4
+        plot_map['fontsize'] = 16
+        plot_map['y2_color'] = 'black'
         abf = pyabf.ABF(plot_opts['filepath'])
         abf.setSweep(sweepNumber=plot_opts['sweep'], channel=0)
-        self.plot_frame.x = abf.sweepX
+        item_label_sting = self.short_name_current_selection.replace(".abf","")
+        plot_map['x'] = abf.sweepX
         if plot_opts['plot_mean_state'] == True:
-            self.plot_frame.y = self._calculate_mean_sweeps(plot_opts)
-            self.plot_frame.sweep_label = self.short_name_current_selection.replace(".abf","")+" mean of all sweeps"
+            plot_map['y1'] = self._calculate_mean_sweeps(plot_opts)
+            item_label_sting += " mean of all sweeps"
+            plot_map['sweep_label'] = item_label_sting
         if plot_opts['plot_mean_state'] == False:
-            self.plot_frame.y = abf.sweepY
-            self.plot_frame.sweep_label = self.short_name_current_selection.replace(".abf","")+" sweep "+ str(plot_opts['sweep'])
-        self.plot_frame.topy_label = abf.sweepLabelY
-        self.plot_frame.x_label = abf.sweepLabelX
+            plot_map['y1'] = abf.sweepY
+            item_label_sting += f" sweep {plot_opts['sweep']}"
+            plot_map['sweep_label'] = item_label_sting
+        plot_map['y1_label'] = abf.sweepLabelY
+        plot_map['x_label'] = abf.sweepLabelX
         if plot_opts['bottom_plot'] == 'c':
-            self.plot_frame.smallplot_y = abf.sweepC
-            self.plot_frame.smallplot_y_label = self.plot_frame.sweep_label + " command waveform"
+            plot_map['y2'] = abf.sweepC
+            plot_map['y2_label'] = "command waveform"
         if plot_opts['bottom_plot'] == 1:
             abf.setSweep(sweepNumber=plot_opts['sweep'], channel=1)
-            self.plot_frame.smallplot_y_label = self.plot_frame.sweep_label + " channel 1"
-            self.plot_frame.smallplot_y = abf.sweepY
+            plot_map['y2'] = abf.sweepY
+            plot_map['y2_label'] = "channel 1"
+        return plot_map
 
     def update_plot(self, event):
         if self.path_current_selection is not None:
             plot_options = self.trace_frame.get_plot_options()
             plot_options['filepath'] = self.path_current_selection
-            self._read_abf_data(plot_options)
             print(f"updating plot with {plot_options}")
-            self.plot_frame.update_plot()
-
-            #return plot_options
+            self.plot_frame.update_plot(plot_map=self._build_plot_map(plot_options))
         else:
             print("Nothing selected, error")
 

@@ -26,10 +26,15 @@ def test_check_is_not_num_or_string():
     x = 1
     x1 = []
     x2 = [[1,2,3], []]
+    x3 = [[1,2,3], 1]
+    x4 = [[1,2,3], "string"]
     plotting._check_is_not_num_or_string(x1)
     plotting._check_is_not_num_or_string(x2)
     with pytest.raises(AssertionError):
         plotting._check_is_not_num_or_string(x)
+    with pytest.raises(AssertionError):
+        plotting._check_is_not_num_or_string(x3)
+
 
 def test_validate_data():
     x = [1,2,3]

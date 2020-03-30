@@ -50,12 +50,12 @@ def test_check_is_not_num_or_string():
 
 def test_must_be_num_or_string():
     test_1 = {"x_label":[],
-              "y_label":[],
+              "y1_label":[],
               "y2_label":[],
               "fontsize":[],
               "linewidth":[]}
     test_pass = {"x_label":"string",
-                 "y_label":"string",
+                 "y1_label":"string",
                  "y2_label":"string",
                  "fontsize":1,
                  "linewidth":3}
@@ -86,11 +86,62 @@ def test_subarrays_must_be_equal():
         plotting._subarrays_must_be_equal(test5)
 
 def test_check_dim_x_dim_each_y_arr():
-    assert 1==2
-
-def test_validate_data_len_and_type():
-    assert 1==2
+    test1 = {"x":[],"y1":[],"y2":[]}
+    test2 = {"x":[1, 2, 3],"y1":[[1,2,3]],"y2":[[1,2,3]]}
+    test3 = {"x":[1, 2, 3],"y1":[[1,2,3],[1,2,3]],"y2":[[1,2,3]]}
+    test4 = {"x":[1, 2, 3],"y1":[[1,2,3],[1,3]],"y2":[[1,2,3],[1,2,3]]}
+    plotting._check_dim_x_dim_each_y_arr(test1)
+    plotting._check_dim_x_dim_each_y_arr(test2)
+    with pytest.raises(AssertionError):
+        plotting._check_dim_x_dim_each_y_arr(test3) # should fail
+    with pytest.raises(AssertionError):
+        plotting._check_dim_x_dim_each_y_arr(test4)
 
 def test_validate_plot_data():
     """integration test of all other functions"""
-    assert 1==2
+    pass1 = {"x":[],
+             "y1":[],
+             "x_label":"x",
+             "y1_label":"y",
+             "y2":[],
+             "y2_label":"y",
+             "fontsize":16,
+             "sweep_label":[],
+             "linewidth":4,
+             "y2_color":"black"}
+    pass2 = {"x":[1,2,3],
+             "y1":[[1,2,3],[1,2,3]],
+             "x_label":"x",
+             "y1_label":"y",
+             "y2":[[1,2,3],[1,2,3]],
+             "y2_label":"y",
+             "fontsize":16,
+             "sweep_label":["sweep1", "sweep2"],
+             "linewidth":4,
+             "y2_color":"black"}
+    fail1 = {"x":[1,2,3],
+             "y1":[[1,2,3]],
+             "x_label":"x",
+             "y1_label":"y",
+             "y2":[[1,2,3]],
+             "y2_label":"y",
+             "fontsize":16,
+             "sweep_label":[],
+             "linewidth":4,
+             "y2_color":"black"}
+    fail2 = {"x":[1,2,3],
+             "y1":[[1,2,3],[1,2,3]],
+             "x_label":"x",
+             "y1_label":"y",
+             "y2":[[1,2,3],[1,2]],
+             "y2_label":"y",
+             "fontsize":16,
+             "sweep_label":["sweep1", "sweep2"],
+             "linewidth":4,
+             "y2_color":"black"}
+    plotting.validate_plot_data(pass1)
+    plotting.validate_plot_data(pass2)
+    with pytest.raises(AssertionError):
+        plotting.validate_plot_data(fail1)
+    with pytest.raises(AssertionError):
+        plotting.validate_plot_data(fail2)

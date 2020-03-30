@@ -22,8 +22,6 @@ def test_check_len_equals():
     with pytest.raises(AssertionError):
         plotting._check_len_equals(x,y_with_list)
 
-
-
 def test_check_is_not_num_or_string():
     x = 1
     x1 = []

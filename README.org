@@ -33,7 +33,7 @@ The idea is to provide a *simple*, cross platform (shar-able) app for viewing an
 - pyabf 2.2.4
 - numpy 1.18.2
 - matplotlib 3.2.1
-c
+
 * linking widgets
 self.label_text_update = tk.StringVar()
 self.label_text_update.set("Default")

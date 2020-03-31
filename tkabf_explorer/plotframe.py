@@ -6,6 +6,8 @@ from matplotlib.backends.backend_tkagg import NavigationToolbar2Tk
 from matplotlib.figure import Figure
 from matplotlib import gridspec
 
+# connecting handlers to get current x and y lims: https://stackoverflow.com/a/31491515/6032156
+
 class PlotFrame(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
@@ -15,6 +17,8 @@ class PlotFrame(tk.Frame):
         self.current_plot_options = {"x":[], "y1":[], "x_label":"x", "y1_label":"y", "y2":[], "y2_label":"y",
                                   "fontsize":16, "sweep_label":[], "linewidth":4, "y2_color":"black"}
         self._legend = None
+        self.xlims = None
+        self.ylims = None
         # basic plot setup
         self.figure = Figure(figsize=(5,5), dpi=100)
         self.gs = gridspec.GridSpec(nrows=2, ncols=1, height_ratios=[2,1])
@@ -24,6 +28,12 @@ class PlotFrame(tk.Frame):
         self.toolbar = NavigationToolbar2Tk(self.figcanvas, self)
         self.toolbar.update()
         self.update_plot()
+
+    def on_lims_change(self,axes):
+        print(f"updated xlims: {self.ax1.get_xlim()}")
+        print(f"updated ylims: {self.ax1.get_ylim()}")
+        self.xlims = self.ax1.get_xlim()
+        self.ylims = self.ax1.get_ylim()
 
     def update_plot(self):
         if self._legend:
@@ -44,14 +54,21 @@ class PlotFrame(tk.Frame):
         self._legend = self.figure.legend()
         self.figcanvas.get_tk_widget().pack(fill=tk.BOTH, expand=1,padx=5, pady=5)
         self.figcanvas._tkcanvas.pack(side=tk.BOTTOM,expand=1,padx=5,pady=5)
+        if self.xlims and self.ylims is not None:
+            self.ax1.set_xlim(self.xlims)
+            self.ax1.set_ylim(self.ylims)
         self.figcanvas.draw()
         self.toolbar.update()
+        self.ax1.callbacks.connect('xlim_changed', self.on_lims_change)
+
 
     def clear_plot(self, event):
         print("clearing plot called")
         self.current_plot_options = {"x":[], "y1":[], "x_label":"x", "y1_label":"y", "y2":[], "y2_label":"y",
                                   "fontsize":16, "sweep_label":[], "linewidth":4, "y2_color":"black"}
         print(f"current_plot_options is {self.current_plot_options}")
+        self.xlims = None
+        self.ylims = None
         self.update_plot()
         #self.figure.legend()
         #self.figcanvas.draw()

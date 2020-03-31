@@ -3,7 +3,7 @@ from tkinter import ttk
 
 class TraceInfoFrame(tk.Frame):
     def __init__(self, parent, controller):
-        tk.Frame.__init__(self, parent)
+        tk.Frame.__init__(self, parent, padx=5,pady=5)
         self.controller_ref = controller # expose parent for clear and plot buttons.
         self.grid_rowconfigure(0, weight=1)
         self.grid_rowconfigure(1, weight=1)

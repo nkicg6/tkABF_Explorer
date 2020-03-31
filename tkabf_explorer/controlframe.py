@@ -33,10 +33,11 @@ class ControlFrame(tk.Frame):
         self.choose_dir_button.grid(row=0)
         self.current_dir_listbox.grid(row=1, sticky="ew", padx=5,pady=1)
 
-    def get_list_of_files_scrollbox_selection(self, event):
+    def get_list_of_files_scrollbox_selection(self):
         ind = self.list_of_files_scrollbox.curselection()
         sel = self.list_of_files_scrollbox.get(ind)
         try:
+            print(f"abf path dict: {self.abf_path_dict}")
             return self.abf_path_dict[sel], sel
         except:
             print("couldn't find it")

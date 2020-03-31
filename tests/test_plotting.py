@@ -3,7 +3,6 @@ from . import context
 import pytest
 from tkabf_explorer import plotting
 
-
 {"x":[], # type: numpy array or list; length must be == to the length of each y1 and y2 sub-array
  "y1":[[]], # type: list of numpy arrays; number of sub arrays must equal number of sub arrays for y2. Length of x, y1 (each subarray), y2 (each subarray) must be equal
  "x_label":"x", # type: string
@@ -145,3 +144,12 @@ def test_validate_plot_data():
         plotting.validate_plot_data(fail1)
     with pytest.raises(AssertionError):
         plotting.validate_plot_data(fail2)
+
+def test_make_string_label():
+    assert 1==2
+
+def test_calculate_mean_sweeps():
+    assert 1==2
+
+def test_build_plot_map():
+    assert 1==2

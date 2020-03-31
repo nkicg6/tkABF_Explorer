@@ -137,13 +137,6 @@ class TraceInfoFrame(tk.Frame):
     def _update_sampling_rate(self, sampling_rate):
         self.trace_vars_frame_sampling_rate_text.config(text=sampling_rate)
 
-    def update_trace_info_frame(self, update_dict):
-        self._update_protocol_name(update_dict['protocol_name'])
-        self._update_file_name(update_dict['file_name'])
-        self._update_sampling_rate(update_dict['sampling_rate'])
-        self._add_sweeps_to_listbox(update_dict['sweepList'])
-        self._populate_plot_listboxes(update_dict['plotable_items'])
-
     def _get_bottom_plot_listbox_selection(self):
         if not self.bottom_plot_listbox.curselection():
             print("_get_bottom_plot_selection nothing selected")
@@ -161,11 +154,17 @@ class TraceInfoFrame(tk.Frame):
     def _get_plot_mean_sweeps_option_state(self):
         return self.plot_mean_sweeps_option.get()
 
-    def get_plot_options(self):
+    def update_trace_info_frame(self, update_dict):
+        self._update_protocol_name(update_dict['protocol_name'])
+        self._update_file_name(update_dict['file_name'])
+        self._update_sampling_rate(update_dict['sampling_rate'])
+        self._add_sweeps_to_listbox(update_dict['sweepList'])
+        self._populate_plot_listboxes(update_dict['plotable_items'])
+
+    def get_plot_options(self,current_meta_dict):
         """composed function returns a map of options for master to plot"""
-        plot_options = {}
-        plot_options["top_plot_channel"] = 0 # could be implemented in the future
-        plot_options["bottom_plot"] = self._get_bottom_plot_listbox_selection()
-        plot_options["sweep"] = self._get_sweep_listbox_selection()
-        plot_options["plot_mean_state"] = self._get_plot_mean_sweeps_option_state()
-        return plot_options
+        current_meta_dict["top_plot_channel"] = 0 # could be implemented in the future
+        current_meta_dict["bottom_plot"] = self._get_bottom_plot_listbox_selection()
+        current_meta_dict["sweep"] = self._get_sweep_listbox_selection()
+        current_meta_dict["plot_mean_state"] = self._get_plot_mean_sweeps_option_state()
+        return current_meta_dict

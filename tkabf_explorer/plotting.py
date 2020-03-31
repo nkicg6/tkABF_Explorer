@@ -1,4 +1,6 @@
 # plotting helper functions
+import numpy as np
+import pyabf
 
 def _check_len_equals(x,y):
     """raises assertion error if len(x) != len(y)"""
@@ -45,7 +47,6 @@ def _check_dim_x_dim_each_y_arr(m):
 
 def validate_plot_data(m):
     """integration test of other fns"""
-    m = m.copy()
     not_num_or_string = ['y1', 'y2']
     assert len(m['y1']) == len(m['sweep_label'])
     assert len(m['y2']) == len(m['sweep_label'])
@@ -54,3 +55,41 @@ def validate_plot_data(m):
     _subarrays_must_be_equal(m)
     _must_be_num_or_string(m)
     _check_dim_x_dim_each_y_arr(m)
+
+def _make_string_label(base, suffix):
+    b = base.replace(".abf","")
+    label = f"{suffix} {b}"
+    return label
+
+def _calculate_mean_sweeps(abf):
+    acc = []
+    for sweep in abf.sweepList:
+        abf.setSweep(sweep)
+        acc.append(abf.sweepY)
+    return np.asarray(acc).mean(axis=0)
+
+def build_plot_map(current_meta_dict, current_plot_options):
+    # current_meta_dict is a field in TkAbfExplorer
+    # current_plot_options is a field in PlotFrame
+    abf = pyabf.ABF(current_meta_dict['file_path'])
+    abf.setSweep(sweepNumber=current_meta_dict['sweep'], channel=0)
+    current_plot_options['x'] = abf.sweepX
+    current_plot_options['x_label'] = abf.sweepLabelX
+    current_plot_options['y1_label'] = abf.sweepLabelY
+    if current_meta_dict['plot_mean_state'] == True:
+        current_plot_options['sweep_label'].append(_make_string_label(current_meta_dict['file_name'],
+                                                                      "mean of all sweeps"))
+        current_plot_options['y1'].append(_calculate_mean_sweeps(abf))
+    if current_meta_dict['plot_mean_state'] == False:
+        current_plot_options['sweep_label'].append(_make_string_label(current_meta_dict['file_name'],
+                                                                      f"sweep {current_meta_dict['sweep']}"))
+        current_plot_options['y1'].append(abf.sweepY)
+    if current_meta_dict['bottom_plot'] == 'c':
+        current_plot_options['y2'].append(abf.sweepC)
+        current_plot_options['y2_label'] = "command waveform"
+    if current_meta_dict['bottom_plot'] == 1:
+        abf.setSweep(sweepNumber=current_meta_dict['sweep'], channel=1)
+        current_plot_options['y2'].append(abf.sweepY)
+        current_plot_options['y2_label'] = "channel 1"
+    validate_plot_data(current_plot_options)
+    return current_plot_options

@@ -37,7 +37,6 @@ class ControlFrame(tk.Frame):
         ind = self.list_of_files_scrollbox.curselection()
         sel = self.list_of_files_scrollbox.get(ind)
         try:
-            print(f"abf path dict: {self.abf_path_dict}")
             return self.abf_path_dict[sel], sel
         except:
             print("couldn't find it")
@@ -56,6 +55,7 @@ class ControlFrame(tk.Frame):
 
     def list_abfs(self):
         abf_list = [i for i in os.listdir(self.working_dir) if i.endswith(".abf")]
+        print(f"working_dir from `list_abfs`: {self.working_dir}")
         for item in abf_list:
             self.abf_path_dict[item] = os.path.join(self.working_dir,item)
         if len(abf_list) ==0:
@@ -74,5 +74,6 @@ class ControlFrame(tk.Frame):
         else:
             starting_dir = os.path.expanduser("~")
         self.working_dir = tk.filedialog.askdirectory(initialdir=starting_dir)
+        print(f"working dir returned from `open_dir` {self.working_dir}")
         self.list_abfs()
         self.set_choose_dir_listbox()

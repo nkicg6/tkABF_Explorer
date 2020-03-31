@@ -161,6 +161,9 @@ class TraceInfoFrame(tk.Frame):
         self._add_sweeps_to_listbox(update_dict['sweepList'])
         self._populate_plot_listboxes(update_dict['plotable_items'])
 
+    def get_updated_trace_info_frame():
+        pass
+
     def get_plot_options(self,current_meta_dict):
         """composed function returns a map of options for master to plot"""
         current_meta_dict["top_plot_channel"] = 0 # could be implemented in the future

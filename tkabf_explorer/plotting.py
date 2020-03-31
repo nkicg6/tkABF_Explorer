@@ -39,11 +39,15 @@ def _subarrays_must_be_equal(m):
 
 def _check_dim_x_dim_each_y_arr(m):
     """length of the x array must equal the length of EACH sub array in y1 and y2"""
-    assert len(m['y1']) == len(m['y2'])
-    for i in m['y1']:
-        _check_len_equals(m['x'], i)
-    for i in m['y2']:
-        _check_len_equals(m['x'], i)
+    try:
+        assert len(m['y1']) == len(m['y2'])
+        for i in m['y1']:
+            _check_len_equals(m['x'], i)
+            for i in m['y2']:
+                _check_len_equals(m['x'], i)
+    except AssertionError as e:
+        print(f"error with data {m}")
+        raise(AssertionError)
 
 def validate_plot_data(m):
     """integration test of other fns"""
@@ -73,6 +77,7 @@ def build_plot_map(current_meta_dict, current_plot_options):
     # current_plot_options is a field in PlotFrame
     abf = pyabf.ABF(current_meta_dict['file_path'])
     abf.setSweep(sweepNumber=current_meta_dict['sweep'], channel=0)
+    print(f">>> current_meta_dict from `build_plot_map` is {current_meta_dict}")
     current_plot_options['x'] = abf.sweepX
     current_plot_options['x_label'] = abf.sweepLabelX
     current_plot_options['y1_label'] = abf.sweepLabelY
@@ -91,5 +96,5 @@ def build_plot_map(current_meta_dict, current_plot_options):
         abf.setSweep(sweepNumber=current_meta_dict['sweep'], channel=1)
         current_plot_options['y2'].append(abf.sweepY)
         current_plot_options['y2_label'] = "channel 1"
-    validate_plot_data(current_plot_options)
+    #validate_plot_data(current_plot_options)
     return current_plot_options

@@ -7,9 +7,17 @@
 #+LATEX_HEADER: \usepackage[round]{natbib}
 #+LATEX_HEADER: \renewcommand{\bibsection}
 #+ARCHIVE: daily_archive.org::datetree/* From master todo
+
+
+
+#+CAPTION: tkABF UI
+#+ATTR_HTML: :width 50% :height 50% :alt  :title  :align 
+#+ATTR_LATEX: :placement [H] :width 0.5\textwidth
+[[file:docs/img/ui_sample.png]]
+
 A simple python tkinter based gui to view and perform semi-automated analysis on axon binary format =ABF= files. We use The excellent pyABF package (https://github.com/swharden/pyABF) to do the hard work of parsing ABF files, Thanks [[https://github.com/swharden/][Scott!]]
 
-The idea is to provide a *simple*, cross platform (shar-able) app for viewing and simple semi-automated analysis. This is in progress, I wouldn't use it yet!
+The idea is to provide a *simple*, cross platform (shar-able) app for viewing and simple semi-automated analysis. This is in progress and will undergo significant improvements in the weeks ahead.
 
 
 * useful tkinter links:
@@ -19,6 +27,13 @@ The idea is to provide a *simple*, cross platform (shar-able) app for viewing an
 - https://wiki.python.org/moin/PyQt/GUI_Testing
 - https://www.tutorialspoint.com/python/tk_scrollbar.htmhttps://effbot.org/tkinterbook/scrollbar.htm
 - https://stackoverflow.com/questions/12124350/how-to-update-the-contents-of-a-figurecanvastkagg
+
+* Requirements
+- python 3.8.2 and Tkinter 8.6
+- pyabf 2.2.4
+- numpy 1.18.2
+- matplotlib 3.2.1
+c
 * linking widgets
 self.label_text_update = tk.StringVar()
 self.label_text_update.set("Default")

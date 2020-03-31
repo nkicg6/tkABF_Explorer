@@ -12,9 +12,6 @@ class PlotFrame(tk.Frame):
         self.grid_rowconfigure(0, weight=1)
         self.grid_columnconfigure(0,weight=1)
         # vars
-        # __default_plot_map is never edited.
-        self._default_plot_options = {"x":[], "y1":[], "x_label":"x", "y1_label":"y", "y2":[], "y2_label":"y",
-                                  "fontsize":16, "sweep_label":[], "linewidth":4, "y2_color":"black"}
         self.current_plot_options = {"x":[], "y1":[], "x_label":"x", "y1_label":"y", "y2":[], "y2_label":"y",
                                   "fontsize":16, "sweep_label":[], "linewidth":4, "y2_color":"black"}
         self._legend = None

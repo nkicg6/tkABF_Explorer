@@ -8,10 +8,12 @@ import pyabf
 import numpy as np
 
 import plotting
-
+# TODO simplify api
+# TODO preserve aspect ratio when plotting, update from toolbar zoom and custom labels
 # TODO handle case when there is not a channel 1. (patch recordings)
 # TODO add default viewport options
 # TODO prettier/better plot formatting
+# can you make a popup frame for analysis?
 
 class TkAbfExplorer(tk.Tk):
     def __init__(self, *args, **kwargs):

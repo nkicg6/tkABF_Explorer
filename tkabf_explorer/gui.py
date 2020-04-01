@@ -1,13 +1,16 @@
+import sys
 import tkinter as tk
 from tkinter import ttk
-import sys
-from controlframe import ControlFrame
-from plotframe import PlotFrame
-from traceinfoframe import TraceInfoFrame
+
 import pyabf
 import numpy as np
 
+from controlframe import ControlFrame
+from plotframe import PlotFrame
 import plotting
+from traceinfoframe import TraceInfoFrame
+
+# TODO minimize state! State is most important for plotting, and it should ALL be contianed in one variable (a map) HERE. All other classes should be for layout and getters which are called from here to update the state model. Use Elm architechture as a guide.
 # TODO simplify api
 # TODO preserve aspect ratio when plotting, update from toolbar zoom and custom labels
 # TODO handle case when there is not a channel 1. (patch recordings)
@@ -39,7 +42,7 @@ class TkAbfExplorer(tk.Tk):
         self.trace_frame = TraceInfoFrame(container, self)
         # frame placement
         self.control_frame.grid(row=0,column=0, sticky="nsew")
-        self.plot_frame.grid(row=0,column=1, sticky="nsew")
+        self.plot_frame.grid(row=0,column=1, sticky="ew")
         self.trace_frame.grid(row=1,columnspan=2, sticky="nsew")
         self.plotable_items = {"Command waveform":"c", "Channel 2":1}
         self.path_current_selection = None

@@ -8,10 +8,11 @@ from matplotlib import gridspec
 
 # connecting handlers to get current x and y lims: https://stackoverflow.com/a/31491515/6032156
 # use span selector to get the ROI to analyze from plot https://matplotlib.org/3.2.0/gallery/widgets/span_selector.html#sphx-glr-gallery-widgets-span-selector-py
-
+# https://dalelane.co.uk/blog/?p=778 need to work on toolbar.
+# https://stackoverflow.com/questions/23172916/matplotlib-tkinter-customizing-toolbar-tooltips
 class PlotFrame(tk.Frame):
     def __init__(self, parent, controller):
-        tk.Frame.__init__(self, parent)
+        tk.Frame.__init__(self, parent,bg="",padx=5,pady=5, relief=tk.RAISED)
         self.grid_rowconfigure(0, weight=1)
         self.grid_columnconfigure(0,weight=1)
         # vars
@@ -26,7 +27,11 @@ class PlotFrame(tk.Frame):
         self.figure = Figure(figsize=(5,5), dpi=100)
         self.gs = gridspec.GridSpec(nrows=2, ncols=1, height_ratios=[2,1])
         self.ax1 = self.figure.add_subplot(self.gs[0,0])
+        self.ax1.spines['right'].set_visible(False)
+        self.ax1.spines['top'].set_visible(False)
         self.ax2 = self.figure.add_subplot(self.gs[1,0], sharex=self.ax1)
+        self.ax2.spines['right'].set_visible(False)
+        self.ax2.spines['top'].set_visible(False)
         self.figcanvas = FigureCanvasTkAgg(self.figure, self)
         self.toolbar = NavigationToolbar2Tk(self.figcanvas, self)
         self.toolbar.update()
@@ -42,7 +47,6 @@ class PlotFrame(tk.Frame):
         if self._legend:
             self._legend.remove()
             self._legend = None
-        print(f"current_plot_options is {self.current_plot_options}")
         self.ax1.cla()
         self.ax2.cla()
         for y1,y2,sweep_label in zip(self.current_plot_options['y1'], self.current_plot_options['y2'], self.current_plot_options['sweep_label']):
@@ -55,7 +59,9 @@ class PlotFrame(tk.Frame):
         self.ax2.set_xlabel(self.current_plot_options['x_label'])
         self._legend = self.figure.legend()
         self.figcanvas.get_tk_widget().pack(fill=tk.BOTH, expand=1,padx=5, pady=5)
-        self.figcanvas._tkcanvas.pack(fill=tk.BOTH,side=tk.BOTTOM,expand=1,padx=5,pady=5)
+        self.figcanvas._tkcanvas.pack()#fill=tk.BOTH,side=tk.LEFT,
+                                      #expand=1,padx=5,pady=5)
+        self.toolbar.pack(side="bottom",expand=0)
         if self.xlims and self.ylims is not None:
             self.ax1.set_xlim(self.xlims)
             self.ax1.set_ylim(self.ylims)

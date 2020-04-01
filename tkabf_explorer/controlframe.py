@@ -1,6 +1,7 @@
 import os
 import tkinter as tk
 from tkinter import ttk
+
 DEBUG_DIR = "/Users/nick/Dropbox/lab_notebook/projects_and_data/mnc/analysis_and_data/extracellular_lfp/data/"
 
 class ControlFrame(tk.Frame):

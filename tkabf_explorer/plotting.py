@@ -4,12 +4,7 @@ import pyabf
 
 def _check_len_equals(x,y):
     """raises assertion error if len(x) != len(y)"""
-    try:
-        assert type(x[0]) == type(y[0]) # controls for comparing a list of lists to a list of len 1
-    except IndexError as e:
-        print(f"empty lists? Exception is: {e}")
-    finally:
-        assert len(x) == len(y)
+    assert len(x) == len(y)
 
 def _check_is_not_num_or_string(x):
     """raises assertion error is type is not expected. Type should be numpy array or list.
@@ -96,5 +91,9 @@ def build_plot_map(current_meta_dict, current_plot_options):
         abf.setSweep(sweepNumber=current_meta_dict['sweep'], channel=1)
         current_plot_options['y2'].append(abf.sweepY)
         current_plot_options['y2_label'] = "channel 1"
-    #validate_plot_data(current_plot_options)
+    try:
+        validate_plot_data(current_plot_options)
+    except Exception as e:
+        print(f"[ERROR in `plotting.validate_plot_data`]: Exception:\n\n {e}\n\n")
+        raise IndexError("inequal length axis")
     return current_plot_options

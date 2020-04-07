@@ -10,7 +10,10 @@ from plotframe import PlotFrame
 import plotting
 from traceinfoframe import TraceInfoFrame
 
+# add a menubar with a plugins option. hard code first analysis one, but should allow for any addition
 # TODO minimize state! State is most important for plotting, and it should ALL be contianed in one variable (a map) HERE. All other classes should be for layout and getters which are called from here to update the state model. Use Elm architechture as a guide.
+# raise popup window for errors https://www.codespeedy.com/create-a-popup-window-in-tkinter-python/
+# popup window plugin for analysis options https://blog.furas.pl/python-tkinter-how-to-create-popup-window-or-messagebox-gb.html
 # TODO simplify api
 # TODO preserve aspect ratio when plotting, update from toolbar zoom and custom labels
 # TODO handle case when there is not a channel 1. (patch recordings)
@@ -55,6 +58,9 @@ class TkAbfExplorer(tk.Tk):
                                                         self.update_meta)
         self.bind("q", sys.exit)
 
+    def show_error(self):
+        tk.messagebox.showerror("Plotting error", "Sorry, you tried to plot things with different axis lengths. Try clearing the plot (push 'c') and plotting again.")
+
      ### methods ###
     def _get_abf_selection(self):
         """sets path_current_selection and short_name_current_selection"""
@@ -85,7 +91,14 @@ class TkAbfExplorer(tk.Tk):
         print(f"event [{event}] triggered `update_meta` call")
 
     def _build_plot_map(self):
-        return plotting.build_plot_map(self.current_meta_dict, self.plot_frame.current_plot_options)
+        try:
+            updated_map = plotting.build_plot_map(self.current_meta_dict,
+                                                  self.plot_frame.current_plot_options)
+            return updated_map
+        except IndexError as e:
+            print("index error caught, raise a notification window now")
+            self.show_error()
+            return self.plot_frame.current_plot_options
 
     def update_plot_options(self):
         self.plot_frame.current_plot_options = _build_plot_map(self)

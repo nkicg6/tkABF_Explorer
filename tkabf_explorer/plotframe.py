@@ -2,7 +2,7 @@ import tkinter as tk
 import matplotlib
 matplotlib.use("TkAgg")
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
-from matplotlib.backends.backend_tkagg import NavigationToolbar2Tk
+from matplotlib.widgets import RectangleSelector
 from matplotlib.figure import Figure
 from matplotlib import gridspec
 
@@ -33,15 +33,22 @@ class PlotFrame(tk.Frame):
         self.ax2.spines['right'].set_visible(False)
         self.ax2.spines['top'].set_visible(False)
         self.figcanvas = FigureCanvasTkAgg(self.figure, self)
-        self.toolbar = NavigationToolbar2Tk(self.figcanvas, self)
-        self.toolbar.update()
         self.update_plot()
+
 
     def on_lims_change(self,axes):
         print(f"updated xlims: {self.ax1.get_xlim()}")
         print(f"updated ylims: {self.ax1.get_ylim()}")
         self.xlims = self.ax1.get_xlim()
         self.ylims = self.ax1.get_ylim()
+
+    def boxzoom(self, eclick, erelease):
+        print('startposition: (%f, %f)' % (eclick.xdata, eclick.ydata))
+        print('endposition  : (%f, %f)' % (erelease.xdata, erelease.ydata))
+        x = sorted([eclick.xdata, erelease.xdata])
+        y = sorted([eclick.ydata, erelease.ydata])
+        self.ax1.set_xlim(x)
+        self.ax1.set_ylim(y)
 
     def update_plot(self):
         if self._legend:
@@ -61,12 +68,12 @@ class PlotFrame(tk.Frame):
         self.figcanvas.get_tk_widget().pack(fill=tk.BOTH, expand=1,padx=5, pady=5)
         self.figcanvas._tkcanvas.pack()#fill=tk.BOTH,side=tk.LEFT,
                                       #expand=1,padx=5,pady=5)
-        self.toolbar.pack(side="bottom",expand=0)
         if self.xlims and self.ylims is not None:
             self.ax1.set_xlim(self.xlims)
             self.ax1.set_ylim(self.ylims)
         self.figcanvas.draw()
-        self.toolbar.update()
+        self.RS = RectangleSelector(self.ax1, self.boxzoom,
+                                    drawtype='box')
         self.ax1.callbacks.connect('xlim_changed', self.on_lims_change)
 
     def clear_plot(self, event):

@@ -12,10 +12,10 @@ from traceinfoframe import TraceInfoFrame
 
 # add a menubar with a plugins option. hard code first analysis one, but should allow for any addition
 # TODO minimize state! State is most important for plotting, and it should ALL be contianed in one variable (a map) HERE. All other classes should be for layout and getters which are called from here to update the state model. Use Elm architechture as a guide.
-# raise popup window for errors https://www.codespeedy.com/create-a-popup-window-in-tkinter-python/
 # popup window plugin for analysis options https://blog.furas.pl/python-tkinter-how-to-create-popup-window-or-messagebox-gb.html
+
 # TODO simplify api
-# TODO preserve aspect ratio when plotting, update from toolbar zoom and custom labels
+# TODO custom plot zoom.
 # TODO handle case when there is not a channel 1. (patch recordings)
 # TODO add default viewport options
 # TODO prettier/better plot formatting
@@ -96,7 +96,6 @@ class TkAbfExplorer(tk.Tk):
                                                   self.plot_frame.current_plot_options)
             return updated_map
         except IndexError as e:
-            print("index error caught, raise a notification window now")
             self.show_error()
             return self.plot_frame.current_plot_options
 
@@ -106,7 +105,6 @@ class TkAbfExplorer(tk.Tk):
     def update_plot_main(self, event):
         self._make_metadata_dict()
         if self.current_meta_dict['file_path'] is not None:
-            #self.update_meta("")
             self._build_plot_map()
             self.plot_frame.update_plot()
         else:

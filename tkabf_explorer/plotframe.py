@@ -35,20 +35,15 @@ class PlotFrame(tk.Frame):
         self.figcanvas = FigureCanvasTkAgg(self.figure, self)
         self.update_plot()
 
-
-    def on_lims_change(self,axes):
-        print(f"updated xlims: {self.ax1.get_xlim()}")
-        print(f"updated ylims: {self.ax1.get_ylim()}")
-        self.xlims = self.ax1.get_xlim()
-        self.ylims = self.ax1.get_ylim()
-
     def boxzoom(self, eclick, erelease):
         print('startposition: (%f, %f)' % (eclick.xdata, eclick.ydata))
         print('endposition  : (%f, %f)' % (erelease.xdata, erelease.ydata))
         x = sorted([eclick.xdata, erelease.xdata])
         y = sorted([eclick.ydata, erelease.ydata])
-        self.ax1.set_xlim(x)
-        self.ax1.set_ylim(y)
+        self.xlims = x
+        self.ylims = y
+        self.ax1.set_xlim(self.xlims)
+        self.ax1.set_ylim(self.ylims)
 
     def update_plot(self):
         if self._legend:
@@ -74,7 +69,6 @@ class PlotFrame(tk.Frame):
         self.figcanvas.draw()
         self.RS = RectangleSelector(self.ax1, self.boxzoom,
                                     drawtype='box')
-        self.ax1.callbacks.connect('xlim_changed', self.on_lims_change)
 
     def clear_plot(self, event):
         print("clearing plot called")

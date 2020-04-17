@@ -27,7 +27,9 @@ class TraceInfoFrame(tk.Frame):
                                          text="bottom",font=controller.medium_font)
         self.plot_options_frame = tk.Frame(self, bg="white")
 
-        # TODO! add commands for these buttons
+        self.plot_options_frame.reset_axis_button = tk.Button(self.plot_options_frame,text="reset axes", font=controller.large_font,
+                                                              width=20,height=2,command=controller.plot_frame.reset_axis)
+
         self.plot_options_frame_mean_checkbox = tk.Checkbutton(self.plot_options_frame, text="Plot mean of sweeps?", width=20,
                                                                var=self.plot_mean_sweeps_option, onvalue=True, offvalue=False,
                                                                font=controller.large_font, command=self._toggle_mean, anchor="center")
@@ -96,8 +98,9 @@ class TraceInfoFrame(tk.Frame):
         self.trace_vars_frame_sampling_rate_label.grid(column=0,row=2,sticky="w")
         self.trace_vars_frame_sampling_rate_text.grid(column=1,row=2,sticky="ew")
         self.plot_options_frame_mean_checkbox.grid(column=0,row=0,sticky="nsew")
-        self.plot_options_frame_clear_plot_button.grid(column=0,row=1, sticky="nsew")
-        self.plot_options_frame_update_plot_button.grid(column=0,row=2, sticky="nsew")
+        self.plot_options_frame.reset_axis_button.grid(column=0,row=1, sticky="nsew")
+        self.plot_options_frame_clear_plot_button.grid(column=0,row=2, sticky="nsew")
+        self.plot_options_frame_update_plot_button.grid(column=0,row=3, sticky="nsew")
 
     def clear_plot(self):
         print("clear plot pressed")

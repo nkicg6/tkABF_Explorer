@@ -1,5 +1,4 @@
 import tkinter as tk
-from tkinter import ttk
 import matplotlib
 matplotlib.use("TkAgg")
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
@@ -13,19 +12,14 @@ from matplotlib import gridspec
 # https://stackoverflow.com/questions/23172916/matplotlib-tkinter-customizing-toolbar-tooltips
 class PlotFrame(tk.Frame):
     def __init__(self, parent, controller):
-        tk.Frame.__init__(self, parent,bg="",padx=5,pady=5, relief=tk.RAISED)
-        self.grid_rowconfigure(0, weight=1)
-        self.grid_columnconfigure(0,weight=1)
-        self.reset_axis_button = tk.Button(self,text="reset axes", font=controller.large_font,
-                                           width=20,height=1,command=self.reset_axis)
-        self.instruction_label = tk.Label(self, text="Click and drag to zoom", font=controller.large_font)
-        self.reset_axis_button.pack(side="bottom",anchor="w",padx=2,pady=2)
-        self.instruction_label.pack(side="bottom", anchor=tk.CENTER, padx=2,pady=2)
+        tk.Frame.__init__(self, parent,padx=5,pady=5)
         # vars
         self.current_plot_options = {"x":[], "y1":[], "x_label":"x",
                                      "y1_label":"y", "y2":[], "y2_label":"y",
                                      "fontsize":16, "sweep_label":[], "linewidth":4,
                                      "y2_color":"black"}
+        self.instructions_label = tk.Label(self,font=controller.large_font, text="Click and drag on the top plot to zoom.")
+        self.instructions_label.pack(side=tk.BOTTOM)
         self._legend = None
         self.xlims = None
         self.ylims = None
@@ -72,7 +66,7 @@ class PlotFrame(tk.Frame):
         self.ax2.set_xlabel(self.current_plot_options['x_label'])
         self._legend = self.figure.legend()
         self.figcanvas.get_tk_widget().pack(fill=tk.BOTH, expand=1,padx=5, pady=5)
-        self.figcanvas._tkcanvas.pack()
+        self.figcanvas._tkcanvas.pack(expand=True,fill=tk.BOTH)
         if self.xlims and self.ylims is not None:
             self.ax1.set_xlim(self.xlims)
             self.ax1.set_ylim(self.ylims)

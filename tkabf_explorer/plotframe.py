@@ -1,4 +1,5 @@
 import tkinter as tk
+from tkinter import ttk
 import matplotlib
 matplotlib.use("TkAgg")
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
@@ -15,6 +16,11 @@ class PlotFrame(tk.Frame):
         tk.Frame.__init__(self, parent,bg="",padx=5,pady=5, relief=tk.RAISED)
         self.grid_rowconfigure(0, weight=1)
         self.grid_columnconfigure(0,weight=1)
+        self.reset_axis_button = tk.Button(self,text="reset axes", font=controller.large_font,
+                                           width=20,height=1,command=self.reset_axis)
+        self.instruction_label = tk.Label(self, text="Click and drag to zoom", font=controller.large_font)
+        self.reset_axis_button.pack(side="bottom",anchor="w",padx=2,pady=2)
+        self.instruction_label.pack(side="bottom", anchor=tk.CENTER, padx=2,pady=2)
         # vars
         self.current_plot_options = {"x":[], "y1":[], "x_label":"x",
                                      "y1_label":"y", "y2":[], "y2_label":"y",
@@ -33,6 +39,11 @@ class PlotFrame(tk.Frame):
         self.ax2.spines['right'].set_visible(False)
         self.ax2.spines['top'].set_visible(False)
         self.figcanvas = FigureCanvasTkAgg(self.figure, self)
+        self.update_plot()
+
+    def reset_axis(self):
+        self.xlims = None
+        self.ylims = None
         self.update_plot()
 
     def boxzoom(self, eclick, erelease):
@@ -61,8 +72,7 @@ class PlotFrame(tk.Frame):
         self.ax2.set_xlabel(self.current_plot_options['x_label'])
         self._legend = self.figure.legend()
         self.figcanvas.get_tk_widget().pack(fill=tk.BOTH, expand=1,padx=5, pady=5)
-        self.figcanvas._tkcanvas.pack()#fill=tk.BOTH,side=tk.LEFT,
-                                      #expand=1,padx=5,pady=5)
+        self.figcanvas._tkcanvas.pack()
         if self.xlims and self.ylims is not None:
             self.ax1.set_xlim(self.xlims)
             self.ax1.set_ylim(self.ylims)

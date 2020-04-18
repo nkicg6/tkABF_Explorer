@@ -105,7 +105,6 @@ class TraceInfoFrame(tk.Frame):
     def clear_plot(self):
         print("clear plot pressed")
         self.controller_ref.plot_frame.clear_plot("") # sim event
-        print(f"val of parent testvar is {self.controller_ref.testvar}")
 
     def update_plot(self):
         print("update plot called")

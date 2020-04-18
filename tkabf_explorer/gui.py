@@ -26,7 +26,6 @@ class TkAbfExplorer(tk.Tk):
         tk.Tk.__init__(self, *args, **kwargs)
         tk.Tk.wm_title(self,"tkABF Viewer v0.1-dev")
         self.geometry("950x800")
-        self.testvar = "I am a parent test var"
         self.large_font = ("Verdana", 14)
         self.medium_font = ("Verdana", 12)
         self.small_font = ("Verdana", 10)
@@ -59,7 +58,16 @@ class TkAbfExplorer(tk.Tk):
         self.bind("q", sys.exit)
 
     def show_error(self):
-        tk.messagebox.showerror("Plotting error", "Sorry, you tried to plot things with different axis lengths. Try clearing the plot (push 'c') and plotting again.")
+        tk.messagebox.showerror("Plotting error", "Sorry, you tried to plot things with different axis lengths. Try clearing the plot (push 'c') and plot again.")
+
+    def _get_plottable_items(self, abf):
+        if abf.channelCount == 1:
+            return ["Command waveform"]
+        if abf.channelCount == 2:
+            return ["Command waveform", "Channel 2"]
+        else:
+            print(f"Only two channels supported, this file has: {abf.channelCount}")
+            return []
 
      ### methods ###
     def _get_abf_selection(self):
@@ -81,7 +89,7 @@ class TkAbfExplorer(tk.Tk):
         self.current_meta_dict['sampling_rate'] = abf.dataPointsPerMs
         self.current_meta_dict['sweepList'] = abf.sweepList
         self.current_meta_dict['bottom_plot'] = self.trace_frame._get_bottom_plot_listbox_selection()
-        self.current_meta_dict['plotable_items'] = self.plotable_items.keys() #TODO get rid of hardcoded var here
+        self.current_meta_dict['plotable_items'] = self._get_plottable_items(abf)#self.plotable_items.keys() #TODO get rid of hardcoded var here
 
     def update_meta(self, event):
         """create metadata and call update function in TraceInfoFrame"""

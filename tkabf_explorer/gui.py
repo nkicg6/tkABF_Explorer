@@ -10,16 +10,13 @@ from plotframe import PlotFrame
 import plotting
 from traceinfoframe import TraceInfoFrame
 
-# add a menubar with a plugins option. hard code first analysis one, but should allow for any addition
 # TODO minimize state! State is most important for plotting, and it should ALL be contianed in one variable (a map) HERE. All other classes should be for layout and getters which are called from here to update the state model. Use Elm architechture as a guide.
 # popup window plugin for analysis options https://blog.furas.pl/python-tkinter-how-to-create-popup-window-or-messagebox-gb.html
 
 # TODO simplify api
-# TODO custom plot zoom.
-# TODO handle case when there is not a channel 1. (patch recordings)
-# TODO add default viewport options
-# TODO prettier/better plot formatting
 # can you make a popup frame for analysis?
+# TODO if one item in plottable list, select first. Otherwise, select the second by default
+# always getting errors from plotting.py when plotting patch clamp files. why?
 
 class TkAbfExplorer(tk.Tk):
     def __init__(self, *args, **kwargs):

@@ -2,3 +2,4 @@
 */__pycache__/*
 __pycache__/
 .pytest_cache/
+testing_fn.py

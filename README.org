@@ -9,6 +9,10 @@
 #+ARCHIVE: daily_archive.org::datetree/* From master todo
 
 
+* No longer updated/maintained
+
+This was a first attempt and I ran into some problems/limitations with interactive matplotlib/Tkinter that I wanted to address. I learned a lot, but I will no longer be updating this repository. Please see [[https://github.com/nkicg6/ABF_Explorer][ABF_Explorer]] for a better version of this same app, written with PyQt/PySide2 and pyqtgraph.
+
 
 #+CAPTION: tkABF UI
 #+ATTR_HTML: :width 50% :height 50% :alt  :title  :align 
